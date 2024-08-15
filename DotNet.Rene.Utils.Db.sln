@@ -22,6 +22,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.UnitTest", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Abstractions", "src\Rene.Utils.Db.Abstractions\Rene.Utils.Db.Abstractions.csproj", "{0D601508-1812-44AB-B6DA-33997C5460B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{4E631180-53AB-4C60-8284-40A32C27C0AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E3556DAE-EB36-4AD0-AABD-74E6037F5A7D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +55,7 @@ Global
 		{CD908D0F-4F28-42D3-BBC3-DCA2C2C0A98F} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
 		{2A7C6363-558F-46CD-B845-6F4C453562E9} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
 		{0D601508-1812-44AB-B6DA-33997C5460B0} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
+		{E3556DAE-EB36-4AD0-AABD-74E6037F5A7D} = {4E631180-53AB-4C60-8284-40A32C27C0AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EEC9D2A-6210-4F6E-BF33-6E0B3765EDBC}
