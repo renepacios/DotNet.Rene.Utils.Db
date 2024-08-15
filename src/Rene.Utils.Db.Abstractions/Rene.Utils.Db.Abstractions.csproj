@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>$(NetStandardTargetVersion)</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>$(MSBuildProjectName.Replace(".Abstractions", ""))</RootNamespace>
   </PropertyGroup>
 
 </Project>
