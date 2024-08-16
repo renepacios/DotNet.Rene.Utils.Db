@@ -11,4 +11,10 @@
         <Xunit>2.9.0</Xunit>
     </PropertyGroup>
 
+    <PropertyGroup Label="EF Versions">
+        <EntityFrameworkCore>8.0.8</EntityFrameworkCore>
+      
+    </PropertyGroup>
+
+
 </Project>
