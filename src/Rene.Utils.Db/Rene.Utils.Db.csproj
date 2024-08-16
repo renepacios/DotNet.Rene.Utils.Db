@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
@@ -10,4 +10,17 @@
     <ProjectReference Include="..\Rene.Utils.Db.Abstractions\Rene.Utils.Db.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DependencyInjection\" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <!--Sopesar Eliminar dependencia con dependencies.props-->
+        <PackageReference Include="MediatR" Version="$(MediatR)" />
+        <PackageReference Include="AutoMapper" Version="$(Automapper)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCore)" />
+        <PackageReference Include="Rene.Utils.Core" Version="$(ReneUtils)" />
+
+
+    </ItemGroup>
 </Project>
