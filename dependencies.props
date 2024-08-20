@@ -2,7 +2,7 @@
     <PropertyGroup Label="SDK Versions">
         <NetStandardTargetVersion>netstandard2.1</NetStandardTargetVersion>
         <NetCoreTargetVersion>net8.0</NetCoreTargetVersion>
-        <!--<LangVersion>8.0</LangVersion>-->
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
   
