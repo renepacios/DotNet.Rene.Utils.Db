@@ -1,15 +1,17 @@
 ﻿
 // ReSharper disable once CheckNamespace
 
-using Rene.Utils.Db.DbInternal;
 
+
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
 
-using EntityFrameworkCore;
-
+    using EntityFrameworkCore;
+    using Rene.Utils.Db.DbInternal;
     using System;
     using System.Reflection;
+    using Rene.Utils.Db.Builder;
 
 
     public static class ServiceCollectionExtensions
@@ -34,14 +36,14 @@ using EntityFrameworkCore;
             builder.RegisterFallBackUow<TDbContext>(options);
 
             return builder.AddDbUtils(options, assemblies);
-            
+
         }
 
         public static WebApplicationBuilder AddDbUtils<TDbContext, TUnitOfWork>(this WebApplicationBuilder builder,
             Action<DbUtilsOptions> setup, params Assembly[] assemblies)
             where TDbContext : DbContext
         {
-           
+
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
             _ = setup ?? throw new ArgumentNullException(nameof(setup));
 
@@ -57,9 +59,9 @@ using EntityFrameworkCore;
 
 
 
-        public static WebApplicationBuilder AddDbUtils<TDbContext>(this WebApplicationBuilder builder,  params Assembly[] assemblies)
+        public static WebApplicationBuilder AddDbUtils<TDbContext>(this WebApplicationBuilder builder, params Assembly[] assemblies)
             where TDbContext : DbContext
-          
+
         {
 
             //_ = services ?? throw new ArgumentNullException(nameof(services));
@@ -105,7 +107,7 @@ using EntityFrameworkCore;
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        private static WebApplicationBuilder RegisterFallBackUow<TDbContext>(this WebApplicationBuilder builder, DbUtilsOptions options) 
+        private static WebApplicationBuilder RegisterFallBackUow<TDbContext>(this WebApplicationBuilder builder, DbUtilsOptions options)
             where TDbContext : DbContext
         {
             options.UnitOfWorkType = typeof(FakeUnitOfWork<TDbContext>);
@@ -114,7 +116,7 @@ using EntityFrameworkCore;
             return builder;
         }
 
-      
+
 
         private static WebApplicationBuilder AddDbUtils(this WebApplicationBuilder builder,
                 DbUtilsOptions options = null, Assembly[] assemblies = null)
@@ -123,17 +125,17 @@ using EntityFrameworkCore;
             // Type dbcontextType = typeof(TDbContext);
             var services = builder.Services;
 
-            //if (assemblies != null && assemblies.Length > 0)
-            //{
-            //    foreach (Assembly assembly in assemblies)
-            //    {
-            //        services.AddMediatRGenericHandlers(options, assembly);
-            //    }
+            if (assemblies != null && assemblies.Length > 0)
+            {
+                foreach (Assembly assembly in assemblies)
+                {
+                    builder.AddMediatRGenericHandlers(options, assembly);
+                }
 
-            //    return services;
-            //}
+                return builder;
+            }
 
-            //return services.AddMediatRGenericHandlers(options);
+            return builder.AddMediatRGenericHandlers(options);
 
             return builder;
         }

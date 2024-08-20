@@ -19,7 +19,7 @@ public static class SampleDbContextUtils
         };
         var weatherForecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index * -1)),
+            Date = DateTime.Now.AddDays(index * -1),
             TemperatureC = rng.Next(-20, 55),
             Summary = summaries[rng.Next(summaries.Length)]
         });

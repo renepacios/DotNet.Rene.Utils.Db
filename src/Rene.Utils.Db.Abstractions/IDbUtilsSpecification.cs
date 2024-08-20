@@ -33,6 +33,21 @@ namespace Rene.Utils.Db
         List<string> IncludeStrings { get; }
         List<KeyValuePair<bool, Expression<Func<T, object>>>> OrderBy { get; }
         Expression<Func<T, object>> GroupBy { get; }
+        
+        //behaviors EF Core
+        /// <summary>
+        /// Ignore Query Filters
+        /// </summary>
+        bool IgnoreQueryFilters { get; }
+        /// <summary>
+        /// AsNoTracking
+        /// </summary>
+        bool AsNoTracking { get; }
+        /// <summary>
+        /// AsSplitQuery
+        /// </summary>
+        bool AsSplitQuery { get; }
+
 
         int Take { get; }
         int Skip { get; }

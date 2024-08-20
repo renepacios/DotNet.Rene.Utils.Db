@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Rene.Utils.Db.Sample.App1
 {
+
+
     public class Program
     {
         public static async Task Main(string[] args)
@@ -16,10 +18,21 @@ namespace Rene.Utils.Db.Sample.App1
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services
+                .AddMagicAutoMapper()
+                .AddAutoMapper(typeof(Program).Assembly);
+
             builder.Services.AddDbContext<SampleDbContext>(options =>
             {
                 options.UseSqlite("Data Source=Database.db");
             });
+
+            builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<Program>());
+
+            builder.AddDbUtils<SampleDbContext>(options =>
+            {
+
+            }, typeof(Program).Assembly);
 
             var app = builder.Build();
 
@@ -38,7 +51,7 @@ namespace Rene.Utils.Db.Sample.App1
 
             //app.Run();
 
-            await  app.RunAsync();
+            await app.RunAsync();
         }
     }
 }
