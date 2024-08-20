@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>$(NetStandardTargetVersion)</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>$(MSBuildProjectName.Replace(".Abstractions", ""))</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+  </ItemGroup>
 
 </Project>

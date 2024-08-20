@@ -2,7 +2,7 @@
     <PropertyGroup Label="SDK Versions">
         <NetStandardTargetVersion>netstandard2.1</NetStandardTargetVersion>
         <NetCoreTargetVersion>net8.0</NetCoreTargetVersion>
-        <!--<LangVersion>8.0</LangVersion>-->
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
   
@@ -10,5 +10,15 @@
         <FluentAssertions>6.12.0</FluentAssertions>
         <Xunit>2.9.0</Xunit>
     </PropertyGroup>
+
+    <PropertyGroup Label="EF Versions">
+        <EntityFrameworkCore>8.0.8</EntityFrameworkCore>
+        <Automapper>13.0.1</Automapper>
+        <ReneUtils>1.2.0</ReneUtils>
+        <VersioningApiExplorer>5.0.0</VersioningApiExplorer>
+        <FluentValidation>10.4.0</FluentValidation>
+        <MediatR>12.4.0</MediatR>
+    </PropertyGroup>
+
 
 </Project>

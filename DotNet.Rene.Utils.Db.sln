@@ -5,22 +5,24 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F35D740-DF0D-4E9B-B398-3513AE39E761}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Solution Items", "__Solution Items", "{3F35D740-DF0D-4E9B-B398-3513AE39E761}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
 		dependencies.props = dependencies.props
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
-		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db", "src\Rene.Utils.Db\Rene.Utils.Db.csproj", "{CD908D0F-4F28-42D3-BBC3-DCA2C2C0A98F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db", "src\Rene.Utils.Db\Rene.Utils.Db.csproj", "{CD908D0F-4F28-42D3-BBC3-DCA2C2C0A98F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.UnitTest", "tests\Rene.Utils.Db.UnitTest\Rene.Utils.Db.UnitTest.csproj", "{2A7C6363-558F-46CD-B845-6F4C453562E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.UnitTest", "tests\Rene.Utils.Db.UnitTest\Rene.Utils.Db.UnitTest.csproj", "{2A7C6363-558F-46CD-B845-6F4C453562E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Abstractions", "src\Rene.Utils.Db.Abstractions\Rene.Utils.Db.Abstractions.csproj", "{0D601508-1812-44AB-B6DA-33997C5460B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Abstractions", "src\Rene.Utils.Db.Abstractions\Rene.Utils.Db.Abstractions.csproj", "{0D601508-1812-44AB-B6DA-33997C5460B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F4C89FCF-6CA0-451E-94CB-511672EF6A93}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.App1", "samples\Rene.Utils.Db.Sample.App1\Rene.Utils.Db.Sample.App1.csproj", "{A52497B9-E6FE-4658-B810-7D59CBF2EE41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{0D601508-1812-44AB-B6DA-33997C5460B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D601508-1812-44AB-B6DA-33997C5460B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D601508-1812-44AB-B6DA-33997C5460B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{CD908D0F-4F28-42D3-BBC3-DCA2C2C0A98F} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
 		{2A7C6363-558F-46CD-B845-6F4C453562E9} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
 		{0D601508-1812-44AB-B6DA-33997C5460B0} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
+		{A52497B9-E6FE-4658-B810-7D59CBF2EE41} = {F4C89FCF-6CA0-451E-94CB-511672EF6A93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EEC9D2A-6210-4F6E-BF33-6E0B3765EDBC}
