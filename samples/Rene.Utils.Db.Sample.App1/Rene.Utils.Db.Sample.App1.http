@@ -1,0 +1,9 @@
+@Rene.Utils.Db.Sample.App1_HostAddress = http://localhost:5237
+
+GET http://localhost:5237/
+Accept: accept: */*
+
+GET {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
