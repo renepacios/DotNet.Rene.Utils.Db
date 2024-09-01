@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Rene.Utils.Db": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:56948;http://localhost:56949"
+    }
+  }
+}
