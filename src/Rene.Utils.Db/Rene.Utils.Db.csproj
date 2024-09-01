@@ -21,7 +21,11 @@
         <PackageReference Include="AutoMapper" Version="$(Automapper)" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCore)" />
         <PackageReference Include="Rene.Utils.Core" Version="$(ReneUtils)" />
-
-
     </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Rene.Utils.Db.UnitTest</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
