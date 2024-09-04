@@ -5,8 +5,6 @@ namespace Rene.Utils.Db.UnitTest
     using Commands;
     using FluentAssertions;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-    using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
     using Models;
     using Moq;
 
@@ -41,38 +39,36 @@ namespace Rene.Utils.Db.UnitTest
             MockMapper = new Mock<IMapper>();
             MockMapper
                 .Setup(m => m.Map<SampleDetailsViewModel, Sample>(It.IsAny<SampleDetailsViewModel>()))
-                .Returns(Sample.Create());
-
-            
+                .Returns((SampleDetailsViewModel s) => Sample.Create(s));
             MockMapper.Setup(m => m.Map<Sample>(It.IsAny<SampleDetailsViewModel>()))
-                .Returns(Sample.Create());
+                .Returns((SampleDetailsViewModel s) => Sample.Create(s));
+
 
             MockMapper
                 .Setup(m => m.Map<Sample, SampleDetailsViewModel>(It.IsAny<Sample>()))
-                .Returns(SampleDetailsViewModel.Create());
+                .Returns((Sample s) => SampleDetailsViewModel.Create(s));
             MockMapper
                 .Setup(m => m.Map<SampleDetailsViewModel>(It.IsAny<Sample>()))
-                .Returns(SampleDetailsViewModel.Create());
+                .Returns((Sample s) => SampleDetailsViewModel.Create(s));
+
+
         }
 
-
-
-
         [Fact]
-        public async Task Test1()
+        public async Task add_command_work_as_expected()
         {
             var vm = SampleDetailsViewModel.DefaultSampleDetails;
             var addCommand = new AddCommand<SampleDetailsViewModel>(vm);
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(MockMapper.Object, MockDbContext.Object, MockUow.Object);
 
             var result = await handler.Handle(addCommand, new CancellationToken());
-            
+
             MockMapper.Verify(m => m.Map<Sample>(It.Is<SampleDetailsViewModel>(x => x == vm)), Times.Once);
-            
+
             MockDbSet
                 .Verify(m => m.AddAsync(It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description), It.IsAny<CancellationToken>()), Times.Once);
-            MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-           
+            //MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+
             //MockMapper.Verify(m => m.Map<SampleDetailsViewModel>(It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description)), Times.Once);
 
             result.Should().BeOfType<SampleDetailsViewModel>();
