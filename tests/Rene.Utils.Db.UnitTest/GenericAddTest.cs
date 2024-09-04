@@ -3,6 +3,7 @@ namespace Rene.Utils.Db.UnitTest
     using AutoMapper;
     using Builder;
     using Commands;
+    using DbInternal;
     using FluentAssertions;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -34,7 +35,16 @@ namespace Rene.Utils.Db.UnitTest
                 .Returns(MockDbSet.Object);
 
             MockUow = new Mock<IDbUtilsUnitOfWork>();
+            MockUow.Setup(s=> s.SaveChanges())
+                .Callback(()=>MockDbContext.Object.SaveChanges());
 
+            MockUow.Setup(s=> s.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                .Callback(()=>MockDbContext.Object.SaveChangesAsync(It.IsAny<CancellationToken>()));
+
+            MockUow.Setup(s=> s.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                .Callback<bool, CancellationToken>((b,c)=>MockDbContext.Object.SaveChangesAsync(b,c));
+            
+            
 
             MockMapper = new Mock<IMapper>();
             MockMapper
@@ -67,18 +77,16 @@ namespace Rene.Utils.Db.UnitTest
 
             MockDbSet
                 .Verify(m => m.AddAsync(It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description), It.IsAny<CancellationToken>()), Times.Once);
-            //MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 
-            //MockMapper.Verify(m => m.Map<SampleDetailsViewModel>(It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description)), Times.Once);
+            MockMapper.Verify(m => m.Map<SampleDetailsViewModel>(It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description)), Times.Once);
 
             result.Should().BeOfType<SampleDetailsViewModel>();
 
             result.Id.Should().Be(99);
             result.Name.Should().Be("NoBodySample");
             result.Description.Should().Be("This is a fake description");
-
-
-        }
+            }
 
     }
 
