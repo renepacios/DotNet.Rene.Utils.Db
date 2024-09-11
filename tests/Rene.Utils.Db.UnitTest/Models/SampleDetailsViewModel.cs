@@ -37,5 +37,25 @@ public class SampleDetailsViewModel : SampleViewModel
         };
     }
 
+    //implement builder pattern with properties of this class
+    public SampleDetailsViewModel WithId(int id)
+    {
+        Id = id;
+        return this;
+    }
+    public SampleDetailsViewModel WithName(string name)
+    {
+        Name = name;
+        return this;
+    }
+    public SampleDetailsViewModel WithDescription(string description)
+    {
+        Description = description;
+        return this;
+    }
+
+
+
+
     public static SampleDetailsViewModel DefaultSampleDetails => Create();
 }

@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Rene.Utils.Db.UnitTest.Mocks;
 using Rene.Utils.Db.UnitTest.Models;
 
 namespace Rene.Utils.Db.UnitTest.Fixtures
 {
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
     public class InfrastructureMocksFixture : IDisposable
     {
 
@@ -12,14 +16,22 @@ namespace Rene.Utils.Db.UnitTest.Fixtures
         public  Mock<IMapper> MockMapper { get; }
         public  Mock<DbSet<Sample>> MockDbSet { get; }
 
+        private Mock<IModel> MockDbContextModel { get; }
 
         public InfrastructureMocksFixture()
         {
-            MockDbSet = DbContextMockUtils.GetMockDbSet(SampleBuilder.CreateList(10));
+            MockDbSet = DbMocks.GetMockDbSet(SampleBuilder.CreateList(10));
+
 
             MockDbContext = new Mock<DbContext>();
             MockDbContext.Setup(m => m.Set<Sample>())
                 .Returns(MockDbSet.Object);
+
+       
+                
+
+            //MockDbContext.SetupProperty(s=>s.Model)
+            //    .SetupGet((db)=> MockDbContextModel.Object);
 
             MockUow = new Mock<IDbUtilsUnitOfWork>();
             MockUow.Setup(s => s.SaveChanges())

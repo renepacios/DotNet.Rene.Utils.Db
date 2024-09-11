@@ -1,17 +1,17 @@
 ﻿
 namespace Rene.Utils.Db.Builder
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using AutoMapper;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Rene.Utils.Db;
     using Rene.Utils.Db.Commands;
     using Rene.Utils.Db.DbInternal;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class GenericCommandHandler<TViewModel, TModel, TDbContext, Tuow> :
         IRequestHandler<AddCommand<TViewModel>, TViewModel>,
@@ -22,7 +22,7 @@ namespace Rene.Utils.Db.Builder
         IRequestHandler<GetBySpecCommand<TViewModel, TModel>, IReadOnlyList<TViewModel>>,
         IRequestHandler<GetPaginatedCommand<TViewModel, TModel>, IDbUtilsPaginatedData<TViewModel>>
 
-      //  where TViewModel : IWithGenericHandler<TModel>
+        //  where TViewModel : IWithGenericHandler<TModel>
         where TDbContext : DbContext
         where TModel : class
         where Tuow : IDbUtilsUnitOfWork
@@ -62,6 +62,7 @@ namespace Rene.Utils.Db.Builder
 
         public async Task<TViewModel> Handle(UpdateCommand<TViewModel> request, CancellationToken cancellationToken)
         {
+            //var model = await _db.FindAsync(request.Id, cancellationToken);
             var model = await _db.FindAsync(request.Id);
 
             if (model == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");

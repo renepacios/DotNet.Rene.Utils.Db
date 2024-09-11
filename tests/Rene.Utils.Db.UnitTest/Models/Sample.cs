@@ -1,6 +1,6 @@
 ﻿namespace Rene.Utils.Db.UnitTest.Models;
 
-public class Sample
+public class Sample : IEntity
 {
     public int Id { get; set; }
     public string Name { get; set; }
