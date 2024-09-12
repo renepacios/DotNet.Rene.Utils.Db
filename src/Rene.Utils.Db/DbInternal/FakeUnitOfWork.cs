@@ -8,17 +8,17 @@ namespace Rene.Utils.Db.DbInternal
     //    string GetKeyNameFromEntityType<TModel>();
     //    string GetKeyNameFromEntityType(Type type);
     //}
-    
-    internal class FakeUnitOfWork<TDbContext>(TDbContext dbContext) : IDbUtilsUnitOfWork
+
+    internal class FakeUnitOfWork<TDbContext>(TDbContext dbContext) :  IDbUtilsUnitOfWork
         where TDbContext : DbContext
     {
         public int SaveChanges() => dbContext.SaveChanges();
 
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)) 
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
             => dbContext.SaveChangesAsync(cancellationToken);
 
-        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken)) 
+        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
             => dbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 
 
