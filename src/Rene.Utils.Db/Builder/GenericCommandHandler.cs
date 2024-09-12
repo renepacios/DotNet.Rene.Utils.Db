@@ -72,11 +72,14 @@ namespace Rene.Utils.Db.Builder
 
 
             //Por si en el viewmodel envían la Pk a null como no puedo hacer inferencia del tipo jugamos un poquito con el esquema del dbcontext
-            var keyName = _dbContext.Model
-                .FindEntityType(typeof(TModel))
-                .FindPrimaryKey().Properties
-                .Select(x => x.Name)
-                .SingleOrDefault();
+            //var keyName = _dbContext.Model
+            //    .FindEntityType(typeof(TModel))
+            //    .FindPrimaryKey().Properties
+            //    .Select(x => x.Name)
+            //    .SingleOrDefault();
+
+
+            var keyName = GetKeyNameFromEntityType();
 
 
             if (!string.IsNullOrEmpty(keyName))
@@ -191,6 +194,16 @@ namespace Rene.Utils.Db.Builder
 
             return await _uow.SaveChangesAsync(cancellationToken);
 
+        }
+
+
+        private string GetKeyNameFromEntityType()
+        {
+            if (_uow is FakeUnitOfWork<TDbContext> fakeUow)
+            {
+                return fakeUow.GetKeyNameFromEntityType<TModel>();
+            }
+            return _dbContext.GetKeyNameFromEntityType<TModel>();
         }
 
     }
