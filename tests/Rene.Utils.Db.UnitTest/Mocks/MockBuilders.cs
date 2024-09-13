@@ -45,6 +45,17 @@
             MockMapper
                 .Setup(m => m.Map<SampleDetailsViewModel, Sample>(It.IsAny<SampleDetailsViewModel>()))
                 .Returns((SampleDetailsViewModel s) => Sample.Create(s));
+
+            MockMapper.Setup(m => m.Map<SampleDetailsViewModel,Sample>(It.IsAny<SampleDetailsViewModel>(),It.IsAny<Sample>()))
+                .Callback((SampleDetailsViewModel s, Sample d) =>
+                {
+                    var a = Sample.Create(s);
+                    d.Id = a.Id;
+                    d.Description = a.Description;
+                    d.Name = a.Name;
+                });
+                
+
             MockMapper.Setup(m => m.Map<Sample>(It.IsAny<SampleDetailsViewModel>()))
                 .Returns((SampleDetailsViewModel s) => Sample.Create(s));
 

@@ -9,6 +9,18 @@
 
     public static class DbMocks
     {
+        private static Mock<EntityEntry<T>> GetEntityEntry<T>(T entity) where T : class, IEntity
+        {
+            var internalEntityEntry = new InternalEntityEntry(
+                new Mock<IStateManager>().Object,
+                new RuntimeEntityType("T", typeof(T), false, null!, null, null, ChangeTrackingStrategy.Snapshot, null, false, null),
+                entity);
+
+            var mockEntityEntry = new Mock<EntityEntry<T>>(internalEntityEntry);
+            mockEntityEntry.Setup(m => m.Entity).Returns(entity);
+            return mockEntityEntry;
+        }
+
 
         public static Mock<DbSet<T>> GetMockDbSet<T>(List<T> data) where T : class, IEntity
         {
@@ -37,6 +49,20 @@
                 {
                     mockEntityEntry.Setup(m => m.Entity).Returns(s);
                     return mockEntityEntry.Object;
+                });
+
+            dbSet.Setup(d => d.Update(It.IsAny<T>()))
+                .Callback<T>(d =>
+                {
+                    data = data.Where(s => s.Id != d.Id).ToList();
+                    data.Add(d);
+
+                })
+                .Returns((T s) =>
+                {
+                    var mEntry = GetEntityEntry(s);
+                    mEntry.Setup(m => m.Entity).Returns(s);
+                    return mEntry.Object;
                 });
 
             dbSet.Setup(d => d.Remove(It.IsAny<T>()))
