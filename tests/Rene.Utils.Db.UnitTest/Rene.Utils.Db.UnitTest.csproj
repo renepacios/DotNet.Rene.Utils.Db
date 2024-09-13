@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Fixtures\**" />
+    <EmbeddedResource Remove="Fixtures\**" />
+    <None Remove="Fixtures\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="GenericDeleteTest.cs" />
     <Compile Remove="GenericGetAllTest.cs" />
     <Compile Remove="GenericGetTest.cs" />

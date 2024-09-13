@@ -187,7 +187,7 @@ namespace Rene.Utils.Db.Builder
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {
-            if (_uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
+            if (_uow==null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
             {
                 return await _dbContext.SaveChangesAsync(cancellationToken);
             }
