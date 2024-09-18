@@ -112,7 +112,7 @@ namespace Rene.Utils.Db.UnitTest
 
             var result = await act.Should()
                     .ThrowAsync<KeyNotFoundException>()
-                .WithMessage($"Entidad no encontrada {entityId}")
+                    .WithMessage($"Entidad no encontrada {entityId}")
                 ;
 
             MockDbSet.Verify(m => m.Remove(It.Is<Sample>(w => w.Id == entityId)), Times.Never);
