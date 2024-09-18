@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="GenericDeleteTest.cs" />
     <Compile Remove="GenericGetAllTest.cs" />
     <Compile Remove="GenericGetTest.cs" />
     <Compile Remove="GenericWithSpecificationTest.cs" />

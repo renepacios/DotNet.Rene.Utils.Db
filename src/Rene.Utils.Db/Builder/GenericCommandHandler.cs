@@ -127,7 +127,7 @@ namespace Rene.Utils.Db.Builder
         {
             var result = await _db.FindAsync(request.Id);
 
-            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id})");
+            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
 
             var entityEntry = _db.Remove(result);
 

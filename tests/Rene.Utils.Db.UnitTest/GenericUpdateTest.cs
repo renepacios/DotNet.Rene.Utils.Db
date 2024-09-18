@@ -46,11 +46,15 @@ namespace Rene.Utils.Db.UnitTest
         [Fact]
         public async Task update_command_work_as_expected()
         {
+
             var entityId = 2;
+            const string newName = "New Name";
+            const string newDescription = "New Description";
+
             var vmNewValues = SampleDetailsViewModel
                 .DefaultSampleDetails
-                .WithDescription("New Description")
-                .WithName("New Name")
+                .WithDescription(newDescription)
+                .WithName(newName)
                 .WithId(1003);
 
 
@@ -77,8 +81,8 @@ namespace Rene.Utils.Db.UnitTest
             result.Should().BeOfType<SampleDetailsViewModel>();
 
             result.Id.Should().Be(entityId);
-            result.Name.Should().Be("New Name");
-            result.Description.Should().Be("New Description");
+            result.Name.Should().Be(newName);
+            result.Description.Should().Be(newDescription);
         }
 
 
