@@ -38,7 +38,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 * [XUnit](https://xunit.github.io/)
 * [Fluent Assertions](http://www.fluentassertions.com/)
-* [Mikael Koskinen](https://mikaelkoskinen.net/) 
+* [Moq](https://github.com/devlooped/moq)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
