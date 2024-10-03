@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="GenericGetAllTest.cs" />
     <Compile Remove="GenericGetTest.cs" />
     <Compile Remove="GenericWithSpecificationTest.cs" />
+    <Compile Remove="Mocks\AsyncEnumerable.cs" />
   </ItemGroup>
 
   <ItemGroup>

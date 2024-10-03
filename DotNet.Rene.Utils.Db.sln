@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Solution Items", "__Solut
 		dependencies.props = dependencies.props
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}"
