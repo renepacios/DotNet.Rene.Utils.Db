@@ -2,16 +2,29 @@
 
 namespace Rene.Utils.Db.DbInternal
 {
-    internal class FakeUnitOfWork<TDbContext>(TDbContext dbContext) : IDbUtilsUnitOfWork
+
+    //internal interface IFakeUnitOfWork : IDbUtilsUnitOfWork
+    //{
+    //    string GetKeyNameFromEntityType<TModel>();
+    //    string GetKeyNameFromEntityType(Type type);
+    //}
+
+    internal class FakeUnitOfWork<TDbContext>(TDbContext dbContext) 
+        : IDbUtilsUnitOfWork //, IFakeUnitOfWork
         where TDbContext : DbContext
     {
-        public int SaveChanges() => dbContext.SaveChanges();
+        public virtual int SaveChanges() => dbContext.SaveChanges();
 
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)) 
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
             => dbContext.SaveChangesAsync(cancellationToken);
 
-        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken)) 
+        public virtual Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
             => dbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+
+
+        internal virtual string GetKeyNameFromEntityType<TModel>() => dbContext.GetKeyNameFromEntityType<TModel>();
+
+        internal virtual string GetKeyNameFromEntityType(Type type) => dbContext.GetKeyNameFromEntityType(type);
     }
 }
