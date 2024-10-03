@@ -400,3 +400,4 @@ FodyWeavers.xsd
 /samples/Rene.Utils.Db.Sample.App1/Database.db-shm
 /samples/Rene.Utils.Db.Sample.App1/Database.db-wal
 /src/Rene.Utils.Db/Properties/launchSettings.json
+*.lutconfig
