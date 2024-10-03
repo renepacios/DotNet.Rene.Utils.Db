@@ -11,8 +11,7 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - Projections in database queries based on the properties of the target ViewModel
 
 ## Getting Started
-
-*TODO*
+	working on it!
 
 ### Prerequisites
 - .NET 6.0 or later
@@ -21,20 +20,28 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - AutoMapper
 
 ### Installation
-
-Install the package from NuGet:
-
-*TODO*
-
-
 Clone the repository:
 
+working on it!
+
+##### Development
+` `C# 
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
+
+## Code of conduct
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
+ ## Acknowledgements
+
+* [XUnit](https://xunit.github.io/)
+* [Fluent Assertions](http://www.fluentassertions.com/)
+* [Moq](https://github.com/devlooped/moq)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For any questions or suggestions, please contact [rpacios@webrene.es](mailto:rpacios@webrene.es).
+For any questions or suggestions, please contact [contacto@webrene.es](mailto:contacto@webrene.es).
