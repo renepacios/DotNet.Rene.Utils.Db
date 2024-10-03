@@ -1,0 +1,82 @@
+﻿name: Upload NuGet Package
+
+on:
+  push:
+    tags: 
+      - v*
+    branches: 
+      - main
+    paths-ignore:
+      - '**/README.md'
+      - '**/LICENSE'    
+  pull_request:
+    branches: 
+      - main    
+    paths-ignore:
+      - '**/README.md'
+      - '**/LICENSE'
+  workflow_dispatch: #to test
+
+  
+jobs:
+      build:
+        env:
+            BUILD_CONFIG: Release
+            PROJECT_NAME: Rene.Utils.Db
+            
+
+
+        name: Build Start
+        runs-on: ubuntu-latest
+
+        # strategy:
+        #   matrix:
+        #    dotnet-version: ['6.0.x','7.0.x','8.0.x']
+
+        steps:
+        - uses: actions/checkout@v2
+        # - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        #   uses: actions/setup-dotnet@v1.7.2
+        #   with:
+        #      dotnet-version: ${{ matrix.dotnet-version }}
+    
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 8.0.x
+
+        - name: Trace Environment
+          run: |
+            echo "Log level: ${{ github.event.inputs.logLevel }}"
+            echo "Tags: ${{ github.event.inputs.tags }}" 
+        
+        - name: Set env. aux vars
+          run: |
+            echo "SOLUTION_NAME=DotNet.${PROJECT_NAME}.sln">> $GITHUB_ENV
+            echo "TEST_PROJECT_PATH=tests/${PROJECT_NAME}.UnitTest/${PROJECT_NAME}.UnitTest.csproj" >> $GITHUB_ENV
+            echo "PROJECT_PATH=src/${PROJECT_NAME}/${PROJECT_NAME}.csproj" >> $GITHUB_ENV
+            echo "ABS_PROJECT_PATH=src/${PROJECT_NAME}.Abstractions/${PROJECT_NAME}.Abstractions.csproj" >> $GITHUB_ENV
+#           echo "INTEGRATION_TEST_PROJECT_PATH=tests/${PROJECT_NAME}.${DI_PROJECT_NAME_POSTFIX}.UnitTest/${PROJECT_NAME}.${DI_PROJECT_NAME_POSTFIX}.UnitTest.csproj" >> $GITHUB_ENV
+
+        - name: Install dependencies                
+          run: dotnet restore $SOLUTION_NAME
+
+        - name: Test - [UnitTest $TEST_PROJECT_PATH]
+          run:  dotnet test $TEST_PROJECT_PATH --no-restore --verbosity normal
+
+        # - name: Test - [UnitTest $DI_TEST_PROJECT_PATH]
+        #   run:  dotnet test $DI_TEST_PROJECT_PATH --no-restore --verbosity normal
+    
+        - name: Build - [$PROJECT_PATH]
+          run:  dotnet build $PROJECT_PATH --configuration $BUILD_CONFIG --no-restore 
+    
+        - name: Build - [$ABS_PROJECT_PATH]
+          run:  dotnet build $ABS_PROJECT_PATH --configuration $BUILD_CONFIG --no-restore 
+
+        - name: dotnet pack [$PROJECT_NAME] & [$$ABS_PROJECT_PATH]
+          run: |
+            dotnet pack $PROJECT_PATH -c $BUILD_CONFIG --include-symbols -p:SymbolPackageFormat=snupkg -o ./artifacts
+            dotnet pack $$ABS_PROJECT_PATH -c $BUILD_CONFIG --include-symbols -p:SymbolPackageFormat=snupkg -o ./artifacts
+
+        - name: Publish NuGet 
+          run: dotnet nuget push ./artifacts/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate  
