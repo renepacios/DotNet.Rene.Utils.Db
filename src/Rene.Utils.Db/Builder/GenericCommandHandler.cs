@@ -1,17 +1,17 @@
 ﻿
 namespace Rene.Utils.Db.Builder
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using AutoMapper;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Rene.Utils.Db;
     using Rene.Utils.Db.Commands;
     using Rene.Utils.Db.DbInternal;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class GenericCommandHandler<TViewModel, TModel, TDbContext, Tuow> :
         IRequestHandler<AddCommand<TViewModel>, TViewModel>,
@@ -22,7 +22,7 @@ namespace Rene.Utils.Db.Builder
         IRequestHandler<GetBySpecCommand<TViewModel, TModel>, IReadOnlyList<TViewModel>>,
         IRequestHandler<GetPaginatedCommand<TViewModel, TModel>, IDbUtilsPaginatedData<TViewModel>>
 
-      //  where TViewModel : IWithGenericHandler<TModel>
+        //  where TViewModel : IWithGenericHandler<TModel>
         where TDbContext : DbContext
         where TModel : class
         where Tuow : IDbUtilsUnitOfWork
@@ -62,6 +62,7 @@ namespace Rene.Utils.Db.Builder
 
         public async Task<TViewModel> Handle(UpdateCommand<TViewModel> request, CancellationToken cancellationToken)
         {
+            //var model = await _db.FindAsync(request.Id, cancellationToken);
             var model = await _db.FindAsync(request.Id);
 
             if (model == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
@@ -71,11 +72,14 @@ namespace Rene.Utils.Db.Builder
 
 
             //Por si en el viewmodel envían la Pk a null como no puedo hacer inferencia del tipo jugamos un poquito con el esquema del dbcontext
-            var keyName = _dbContext.Model
-                .FindEntityType(typeof(TModel))
-                .FindPrimaryKey().Properties
-                .Select(x => x.Name)
-                .SingleOrDefault();
+            //var keyName = _dbContext.Model
+            //    .FindEntityType(typeof(TModel))
+            //    .FindPrimaryKey().Properties
+            //    .Select(x => x.Name)
+            //    .SingleOrDefault();
+
+
+            var keyName = GetKeyNameFromEntityType();
 
 
             if (!string.IsNullOrEmpty(keyName))
@@ -123,7 +127,7 @@ namespace Rene.Utils.Db.Builder
         {
             var result = await _db.FindAsync(request.Id);
 
-            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id})");
+            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
 
             var entityEntry = _db.Remove(result);
 
@@ -183,13 +187,23 @@ namespace Rene.Utils.Db.Builder
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {
-            if (_uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
+            if (_uow==null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
             {
                 return await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
             return await _uow.SaveChangesAsync(cancellationToken);
 
+        }
+
+
+        private string GetKeyNameFromEntityType()
+        {
+            if (_uow is FakeUnitOfWork<TDbContext> fakeUow)
+            {
+                return fakeUow.GetKeyNameFromEntityType<TModel>();
+            }
+            return _dbContext.GetKeyNameFromEntityType<TModel>();
         }
 
     }
