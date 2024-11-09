@@ -10,6 +10,7 @@
         <Description>Rene.Utils.Db is a utility library for handling database operations using Entity Framework Core. It provides generic command handlers and unit of work implementations to simplify database interactions</Description>
         <PackageProjectUrl>https://github.com/renepacios/DotNet.Rene.Utils.Db</PackageProjectUrl>
         <RepositoryUrl>https://github.com/renepacios/DotNet.Rene.Utils.Db</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <!--<Nullable></Nullable>-->
     </PropertyGroup>
 
@@ -36,5 +37,12 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
         </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
     </ItemGroup>
 </Project>
