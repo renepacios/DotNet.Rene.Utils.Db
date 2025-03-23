@@ -1,9 +1,52 @@
 @Rene.Utils.Db.Sample.App1_HostAddress = http://localhost:5237
+### https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0
 
-GET http://localhost:5237/
-Accept: accept: */*
+@baseUrl = http://localhost:5237
 
-GET {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast/
+GET {{baseUrl}}/
 Accept: application/json
+
+
+### generate get all request
+GET {{baseUrl}}/weatherforecast/
+Accept: application/json
+
+### generate get by id request
+GET {{baseUrl}}/weatherforecast/1
+Accept: application/json
+
+### generate post request
+POST {{baseUrl}}/weatherforecast/
+Content-Type: application/json
+{
+  "date": "2021-01-01T00:00:00",
+  "temperatureC": 0,
+  "summary": "Created"
+}
+
+### generate put request
+PUT {{baseUrl}}/weatherforecast/7
+Content-Type: application/json
+{
+  "date": "2021-01-01T00:00:00",
+  "temperatureC": 10,
+  "summary": "{{$processEnv USERNAME}} - {{$datetime iso8601}}}"
+}
+
+### generate delete request
+DELETE {{baseUrl}}/weatherforecast/1
+Accept: application/json
+
+
+GET {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast
+
+###
+
+POST {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast
+Content-Type: application/json
+
+{
+  //WeatherForecastViewModelDetails
+}
 
 ###

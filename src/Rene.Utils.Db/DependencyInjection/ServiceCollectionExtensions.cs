@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using Rene.Utils.Db.DbInternal;
     using System;
     using System.Reflection;
+    using AspNetCore.Builder;
     using Rene.Utils.Db.Builder;
 
 

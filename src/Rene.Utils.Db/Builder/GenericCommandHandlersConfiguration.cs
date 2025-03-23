@@ -8,14 +8,15 @@
 
 namespace Rene.Utils.Db.Builder
 {
+    using Commands;
+    using Db;
+    using MediatR;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using MediatR;
-    using Microsoft.Extensions.DependencyInjection;
-    using Rene.Utils.Db;
-    using Rene.Utils.Db.Commands;
 
     internal static class GenericCommandHandlersConfiguration
     {
@@ -27,15 +28,15 @@ namespace Rene.Utils.Db.Builder
             Type filterSuperType = typeof(IWithGenericHandler<>); //change this type to select viewmodels with generic commandHandlers
             const string INTERFACE_NAME = "IWithGenericHandler";
             const string PROPERTY_MODEL_TYPE_NAME = "MapFromType";
-                        
+
             //opciones de arranque
             Type dbContextType = options.DbContextType;
             Type uowType = options.UnitOfWorkType;
             //TODO: Gestionar la opción de UnitOfWork
-            
+
 
             var assembly = assemblyToScan ?? Assembly.GetCallingAssembly();//  typeof(ContainerBuilder).Assembly
-            
+
 
             //Get viewmodel to implement generic handlers
             var viewModelsTypes = assembly.GetExportedTypes()
@@ -61,7 +62,7 @@ namespace Rene.Utils.Db.Builder
 
 
 
-                Type GetCommandHandler() 
+                Type GetCommandHandler()
                     => typeof(GenericCommandHandler<,,,>).MakeGenericType(viewModelType, modelType, dbContextType, uowType);
 
                 //Método Helper para no repetir código en los comandos que retornan el viewModel
@@ -103,7 +104,7 @@ namespace Rene.Utils.Db.Builder
                 var getFilterCommandType = typeof(GetBySpecCommand<,>).MakeGenericType(viewModelType, modelType);
                 var iReadOnlyViewModelType = typeof(IReadOnlyList<>).MakeGenericType(viewModelType);
                 var interfaceGetFilterCommandHandlerType = typeof(IRequestHandler<,>).MakeGenericType(getFilterCommandType, iReadOnlyViewModelType);
-                var concreteGetFilterCommandHandlerType =GetCommandHandler(); //  typeof(GenericCommandHandler<,,>).MakeGenericType(viewModelType, modelType, dbContextType);
+                var concreteGetFilterCommandHandlerType = GetCommandHandler(); //  typeof(GenericCommandHandler<,,>).MakeGenericType(viewModelType, modelType, dbContextType);
                 services.AddScoped(interfaceGetFilterCommandHandlerType, concreteGetFilterCommandHandlerType);
 
 
