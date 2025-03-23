@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.App1", "Rene.Utils.Db.Sample.App1.csproj", "{017828E1-4F4D-4B22-A955-B030920B0F1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{017828E1-4F4D-4B22-A955-B030920B0F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{017828E1-4F4D-4B22-A955-B030920B0F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{017828E1-4F4D-4B22-A955-B030920B0F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{017828E1-4F4D-4B22-A955-B030920B0F1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A362517F-7FEC-4EF6-B930-08462949604A}
+	EndGlobalSection
+EndGlobal

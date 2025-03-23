@@ -29,8 +29,20 @@ namespace Rene.Utils.Db.Sample.App1.Controllers
             => Ok(await _sender.Send(new GetAllCommand<WeatherForecastViewModel>()));
 
         [HttpGet("{id}", Name = "GetWeatherForecastById")]
-        public async Task<IActionResult> GetById(int id) 
-            => Ok(await _sender.Send(new GetCommand<WeatherForecastViewModelDetails>(id)));
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var res = await _sender.Send(new GetCommand<WeatherForecastViewModelDetails>(id));
+                return Ok(res);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            
+        }
+             
 
         [HttpGet("paginated", Name = "GetWeatherForecastPaginated")]
         public async Task<IActionResult> GetPaginated([FromQuery] int page = 0, [FromQuery] int size = 10)

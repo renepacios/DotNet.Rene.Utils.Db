@@ -1,8 +1,9 @@
 
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Rene.Utils.Db.Sample.App1
 {
+    using Microsoft.EntityFrameworkCore;
 
 
     public class Program

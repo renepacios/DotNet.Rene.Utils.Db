@@ -4,7 +4,7 @@ namespace Rene.Utils.Db.Sample.App1;
 
 public static class SampleDbContextUtils
 {
-    public static async Task InitializeDbAsync(this WebApplication app)
+    public static async Task InitializeDbAsync(this IHost app)
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
