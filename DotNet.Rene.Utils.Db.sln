@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{014B1512-E59
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".repo", ".repo", "{3F35D740-DF0D-4E9B-B398-3513AE39E761}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
 		dependencies.props = dependencies.props
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -27,10 +29,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.App1", "samples\Rene.Utils.Db.Sample.App1\Rene.Utils.Db.Sample.App1.csproj", "{A52497B9-E6FE-4658-B810-7D59CBF2EE41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B645729B-4400-45F5-ADBA-DD8E39DE3833}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-		.github\workflows\nuget-publish.yml = .github\workflows\nuget-publish.yml
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
