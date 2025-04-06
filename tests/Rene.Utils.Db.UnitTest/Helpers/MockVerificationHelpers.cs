@@ -1,9 +1,9 @@
 ﻿namespace Rene.Utils.Db.UnitTest.Helpers
 {
     using AutoMapper;
-    using DbInternal;
     using Microsoft.EntityFrameworkCore;
     using Models;
+    using System.Linq.Expressions;
 
     internal static class MockVerificationHelpers
     {
@@ -89,6 +89,28 @@
         }
 
         /// <summary>
+        /// Verifies that .ProjectTo<SampleDetailsViewModel> was called once.
+        /// </summary>
+        internal static void VerifyProjectedToViewModel(this Mock<IMapper> mapperMock, IEnumerable<SampleDetailsViewModel> data, Times? times = null)
+        {
+            mapperMock.Verify(
+                m => m.ProjectTo<SampleDetailsViewModel>(
+                    It.Is<IQueryable<Sample>>(source =>
+                        data.Any(e =>
+                            source.Any(x => x.Id == e.Id &&
+                                x.Name == e.Name &&
+                                x.Description == e.Description
+                            )
+                        )
+                    ),
+                    It.IsAny<object?>(),
+                    It.IsAny<Expression<Func<SampleDetailsViewModel, object>>[]>()
+                ),
+                times ?? Times.Once()
+            );
+        }
+
+        /// <summary>
         /// Verifies that SaveChangesAsync was called once on the DbContext.
         /// </summary>
         /// <param name="dbContextMock"></param>
@@ -102,15 +124,6 @@
         /// </summary>
         /// <param name="uowMock"></param>
         internal static void VerifySaveChangesAsyncCalled(this Mock<IDbUtilsUnitOfWork> uowMock, Times? times = null)
-        {
-            uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), times ?? Times.Once());
-        }
-
-        /// <summary>
-        /// Verifies that SaveChangesAsync was called once on the fake Unit of Work.
-        /// </summary>
-        /// <param name="uowMock"></param>
-        internal static void VerifySaveChangesAsyncCalled(this Mock<FakeUnitOfWork<DbContext>> uowMock, Times? times = null)
         {
             uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), times ?? Times.Once());
         }

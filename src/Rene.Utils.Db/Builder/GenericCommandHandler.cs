@@ -108,7 +108,7 @@ namespace Rene.Utils.Db.Builder
 
             var dev = await _mapper
                 .ProjectTo<TViewModel>(_db.AsNoTracking())
-                .ToListAsync(cancellationToken: cancellationToken);
+                .ToListAsync(cancellationToken);
 
             return dev;
             //return dev.Select(m => _mapper.Map<TViewModel>(m));
@@ -140,7 +140,7 @@ namespace Rene.Utils.Db.Builder
 
         public async Task<IReadOnlyList<TViewModel>> Handle(GetBySpecCommand<TViewModel, TModel> request, CancellationToken cancellationToken)
         {
-            IQueryable<TModel> data = SpecificationEvaluator<TModel>.GetQuery(_db, request.Specification);
+            var data = SpecificationEvaluator<TModel>.GetQuery(_db, request.Specification);
 
             var dev = await _mapper
                 .ProjectTo<TViewModel>(data.AsNoTracking())
@@ -187,7 +187,7 @@ namespace Rene.Utils.Db.Builder
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {
-            if (_uow==null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
+            if (_uow == null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
             {
                 return await _dbContext.SaveChangesAsync(cancellationToken);
             }

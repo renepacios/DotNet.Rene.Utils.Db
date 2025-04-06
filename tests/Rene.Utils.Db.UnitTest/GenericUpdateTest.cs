@@ -14,7 +14,7 @@ namespace Rene.Utils.Db.UnitTest
         public async Task Update_With_FakeUow_Command_Work_As_Expected()
         {
             // 1) We reuse the scenario from the fixture
-            var scenario = MockScenarioFactory.CreateSampleScenario(10);
+            var scenario = MockScenarioFactory.CreateSampleScenario(howMany: 10, strategy: UowStrategy.Fake);
 
             var entityId = 2;
             var newName = "New Name";
@@ -24,7 +24,7 @@ namespace Rene.Utils.Db.UnitTest
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
                 scenario.MapperMock.Object,
                 scenario.DbContextMock.Object,
-                scenario.FakeUowMock.Object
+                scenario.UowMock.Object
             );
 
             // 3) Input command
@@ -43,7 +43,7 @@ namespace Rene.Utils.Db.UnitTest
 
             scenario.DbSetMock.VerifyUpdateCalledWithId(vm, entityId);
 
-            scenario.FakeUowMock.VerifySaveChangesAsyncCalled();
+            scenario.UowMock.VerifySaveChangesAsyncCalled();
 
             scenario.MapperMock.VerifyMappedBackToViewModel(vm);
 

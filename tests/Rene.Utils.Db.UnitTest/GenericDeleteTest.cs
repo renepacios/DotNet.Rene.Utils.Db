@@ -14,7 +14,7 @@ namespace Rene.Utils.Db.UnitTest
         public async Task Delete_With_FakeUow_Command_Work_As_Expected()
         {
             // 1) Create a new scenario with some sample data
-            var scenario = MockScenarioFactory.CreateSampleScenario(howMany: 5);
+            var scenario = MockScenarioFactory.CreateSampleScenario(howMany: 5, strategy: UowStrategy.Fake);
 
             // 2) Build the DeleteCommand and handler
             var entityId = 2;
@@ -23,7 +23,7 @@ namespace Rene.Utils.Db.UnitTest
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
                 scenario.MapperMock.Object,
                 scenario.DbContextMock.Object,
-                scenario.FakeUowMock.Object // pass our fake UoW
+                scenario.UowMock.Object
             );
 
             // 3) Execute
@@ -32,7 +32,7 @@ namespace Rene.Utils.Db.UnitTest
             // 4) Verify
             scenario.DbSetMock.VerifyRemoveCalledWithId(entityId);
             scenario.DbContextMock.VerifySaveChangesAsyncCalled();
-            scenario.FakeUowMock.VerifySaveChangesAsyncCalled();
+            scenario.UowMock.VerifySaveChangesAsyncCalled();
 
             // 5) Assert the result
             result.Should().BeTrue();

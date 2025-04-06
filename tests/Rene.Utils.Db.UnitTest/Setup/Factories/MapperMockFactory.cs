@@ -2,6 +2,8 @@
 {
     using AutoMapper;
     using Models;
+    using Models.AsyncEnumerable;
+    using System.Linq.Expressions;
 
     internal static class MapperMockFactory
     {
@@ -39,6 +41,36 @@
                     d.Description = a.Description;
                     d.Name = a.Name;
                 });
+
+            mapperMock
+                .Setup(m => m.Map<IEnumerable<SampleDetailsViewModel>>(It.IsAny<IEnumerable<Sample>>()))
+                .Returns((IEnumerable<Sample> s) =>
+                {
+                    var result = new List<SampleDetailsViewModel>();
+                    foreach (var item in s)
+                    {
+                        result.Add(SampleDetailsViewModel.Create(item));
+                    }
+                    return result;
+                });
+
+            mapperMock
+                .Setup(m => m.ProjectTo<SampleDetailsViewModel>(
+                    It.IsAny<IQueryable<Sample>>(),
+                    It.IsAny<object?>(),
+                    It.IsAny<Expression<Func<SampleDetailsViewModel, object>>[]>()
+                ))
+                .Returns((IQueryable<Sample> source, object? parameters, Expression<Func<SampleDetailsViewModel, object>>[] membersToExpand) =>
+                {
+                    var result = new List<SampleDetailsViewModel>();
+                    foreach (var item in source)
+                    {
+                        result.Add(SampleDetailsViewModel.Create(item));
+                    }
+
+                    return new TestAsyncEnumerable<SampleDetailsViewModel>(result);
+                });
+
 
             return mapperMock;
         }

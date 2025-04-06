@@ -4,8 +4,14 @@
     using Factories;
     using Microsoft.EntityFrameworkCore;
     using Models;
-    using Rene.Utils.Db.DbInternal;
     using System.Collections.Generic;
+
+    public enum UowStrategy
+    {
+        None,
+        Real,
+        Fake
+    }
 
     /// <summary>
     /// Bundles all relevant mocks (DbContext, UoW, Mapper, DbSet, and data) 
@@ -15,23 +21,20 @@
         where T : class, IEntity
     {
         internal Mock<DbContext> DbContextMock { get; }
-        internal Mock<IDbUtilsUnitOfWork> UowMock { get; }
-        internal Mock<FakeUnitOfWork<DbContext>> FakeUowMock { get; }
+        internal Mock<IDbUtilsUnitOfWork>? UowMock { get; }
         internal Mock<IMapper> MapperMock { get; }
         internal Mock<DbSet<T>> DbSetMock { get; }
         internal List<T> Data { get; }
 
         internal MockScenario(
             Mock<DbContext> dbContextMock,
-            Mock<IDbUtilsUnitOfWork> uowMock,
-            Mock<FakeUnitOfWork<DbContext>> fakeUowMock,
+            Mock<IDbUtilsUnitOfWork>? uowMock,
             Mock<IMapper> mapperMock,
             Mock<DbSet<T>> dbSetMock,
             List<T> data)
         {
             DbContextMock = dbContextMock;
             UowMock = uowMock;
-            FakeUowMock = fakeUowMock;
             MapperMock = mapperMock;
             DbSetMock = dbSetMock;
             Data = data;
@@ -44,10 +47,10 @@
     /// </summary>
     internal static class MockScenarioFactory
     {
-        internal static MockScenario<Sample> CreateSampleScenario(int howMany = 10)
+        internal static MockScenario<Sample> CreateSampleScenario(int howMany = 10, UowStrategy strategy = UowStrategy.Real)
         {
             var data = SampleBuilder.CreateList(howMany);
-            return CreateScenario<Sample>(data, MapperMockFactory.CreateSampleMapper);
+            return CreateScenario<Sample>(data, MapperMockFactory.CreateSampleMapper, strategy);
         }
 
         /// <summary>
@@ -57,7 +60,7 @@
         /// <typeparam name="T">The entity type.</typeparam>
         /// <param name="seedData">In-memory list of seed data for the mocked DbSet.</param>
         /// <param name="mapperFactory">Function that creates a mapper mock. </param>
-        internal static MockScenario<T> CreateScenario<T>(List<T> seedData, Func<Mock<IMapper>> mapperFactory)
+        internal static MockScenario<T> CreateScenario<T>(List<T> seedData, Func<Mock<IMapper>> mapperFactory, UowStrategy strategy)
             where T : class, IEntity
         {
             // 1) Create DbSet mock
@@ -67,10 +70,7 @@
             var dbContextMock = DbContextMockFactory.Create(dbSetMock);
 
             // 3) Create UoW mock
-            var uowMock = UowMockFactory.Create(dbContextMock);
-
-            // 4) Create Fake UoW mock
-            var fakeUowMock = FakeUowMockFactory.Create(dbContextMock);
+            var uowMock = CreateUowMock(strategy, dbContextMock);
 
             // 5) Create or pass in the mapper mock
             var mapperMock = mapperFactory();
@@ -79,12 +79,20 @@
             return new MockScenario<T>(
                 dbContextMock,
                 uowMock,
-                fakeUowMock,
                 mapperMock,
                 dbSetMock,
                 seedData
             );
         }
+
+        private static Mock<IDbUtilsUnitOfWork> CreateUowMock(UowStrategy strategy, Mock<DbContext> dbContextMock) =>
+            strategy switch
+            {
+                UowStrategy.None => null,
+                UowStrategy.Real => UowMockFactory.Create(dbContextMock),
+                UowStrategy.Fake => FakeUowMockFactory.Create(dbContextMock).As<IDbUtilsUnitOfWork>(),
+                _ => null
+            };
     }
 
 }
