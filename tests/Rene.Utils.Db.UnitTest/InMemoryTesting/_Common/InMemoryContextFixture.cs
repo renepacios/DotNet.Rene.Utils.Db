@@ -1,4 +1,5 @@
-﻿namespace Rene.Utils.Db.UnitTest.InMemoryTesting._Common
+﻿// ReSharper disable once CheckNamespace
+namespace Rene.Utils.Db.UnitTest.Specifications
 {
     using Microsoft.EntityFrameworkCore;
     using Tests.Common;

@@ -1,6 +1,6 @@
-﻿namespace Rene.Utils.Db.UnitTest.InMemoryTesting.Specifications.QueryEvaluation
+﻿// ReSharper disable once CheckNamespace
+namespace Rene.Utils.Db.UnitTest.Specifications
 {
-    using _Common;
     using Builder;
     using Models.Specifications;
     using Tests.Common;
