@@ -1,8 +1,13 @@
 ﻿// ReSharper disable once CheckNamespace
+
 namespace Rene.Utils.Db.UnitTest.Specifications
 {
     using Microsoft.EntityFrameworkCore;
     using Tests.Common;
+
+    // This class has no code, it's just a marker for xUnit
+    [CollectionDefinition("InMemoryContextCollection")]
+    public class InMemoryContextCollection : ICollectionFixture<InMemoryContextFixture>;
 
     public class InMemoryContextFixture : IAsyncLifetime
     {

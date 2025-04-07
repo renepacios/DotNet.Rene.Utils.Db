@@ -1,4 +1,5 @@
 ﻿// ReSharper disable once CheckNamespace
+
 namespace Rene.Utils.Db.UnitTest.Specifications
 {
     using Builder;
@@ -11,7 +12,6 @@ namespace Rene.Utils.Db.UnitTest.Specifications
         public void SpecificationFiltersCorrectly_WithoutEF()
         {
             // Arrange
-            // Suppose your spec checks Name starts with "A"
             var spec = new NameStartsWithSpec("A");
 
             var data = new List<Sample>

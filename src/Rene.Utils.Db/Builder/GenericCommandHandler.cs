@@ -1,17 +1,9 @@
-﻿
-namespace Rene.Utils.Db.Builder
+﻿namespace Rene.Utils.Db.Builder
 {
     using AutoMapper;
-    using MediatR;
+    using Commands;
+    using DbInternal;
     using Microsoft.EntityFrameworkCore;
-    using Rene.Utils.Db;
-    using Rene.Utils.Db.Commands;
-    using Rene.Utils.Db.DbInternal;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     internal class GenericCommandHandler<TViewModel, TModel, TDbContext, Tuow> :
         IRequestHandler<AddCommand<TViewModel>, TViewModel>,
@@ -27,12 +19,12 @@ namespace Rene.Utils.Db.Builder
         where TModel : class
         where Tuow : IDbUtilsUnitOfWork
     {
-        private readonly IMapper _mapper;
+        private readonly DbSet<TModel> _db;
 
         private readonly TDbContext _dbContext;
-        private readonly Tuow _uow;
+        private readonly IMapper _mapper;
 
-        private readonly DbSet<TModel> _db;
+        private readonly Tuow _uow;
         //   private readonly ISimpleCrudServiceAsync<TModel> _db;
 
         public GenericCommandHandler(IMapper mapper, TDbContext dbContext, Tuow uow)
@@ -60,6 +52,80 @@ namespace Rene.Utils.Db.Builder
             //  return request.ViewModel;
         }
 
+        public async Task<bool> Handle(DeleteCommand<TViewModel> request, CancellationToken cancellationToken)
+        {
+            var result = await _db.FindAsync(request.Id);
+
+            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
+
+            var entityEntry = _db.Remove(result);
+
+            //  await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await SaveChanges(cancellationToken);
+
+            return true;
+        }
+
+        public async Task<IEnumerable<TViewModel>> Handle(GetAllCommand<TViewModel> request, CancellationToken cancellationToken)
+        {
+            //var dev = await _db.AsNoTracking()
+
+            var dev = await _mapper
+                .ProjectTo<TViewModel>(_db.AsNoTracking())
+                .ToListAsync(cancellationToken);
+
+            return dev;
+            //return dev.Select(m => _mapper.Map<TViewModel>(m));
+        }
+
+        public async Task<IReadOnlyList<TViewModel>> Handle(GetBySpecCommand<TViewModel, TModel> request, CancellationToken cancellationToken)
+        {
+            var data = SpecificationEvaluator<TModel>.GetQuery(_db, request.Specification);
+
+            var dev = await _mapper
+                .ProjectTo<TViewModel>(data.AsNoTracking())
+                .ToListAsync(cancellationToken);
+
+            return dev;
+
+            //return _mapper.Map<IReadOnlyList<TViewModel>>(data);
+        }
+
+        public async Task<TViewModel> Handle(GetCommand<TViewModel> request, CancellationToken cancellationToken)
+        {
+            var dev = await _db.FindAsync(request.Id);
+
+            if (dev == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
+
+            return _mapper.Map<TViewModel>(dev);
+        }
+
+        public async Task<IDbUtilsPaginatedData<TViewModel>> Handle(GetPaginatedCommand<TViewModel, TModel> request, CancellationToken cancellationToken)
+        {
+            if (request.Specification != null && request.Specification.IsPagingEnabled) throw new ArgumentException("Specification must be without pagination settings");
+
+            //Hacemos que pida 1 registro de más para calcular si hay más páginas de registro 
+            var registrosApedir = request.Size + 1;
+
+            //Contemplamos si pide registros paginados sin filtros, el count será el total de registros
+            var query = request.Specification == null ? _db.AsNoTracking() : SpecificationEvaluator<TModel>.GetQuery(_db.AsNoTracking(), request.Specification);
+
+
+            var totalRegistros = await query.CountAsync(cancellationToken);
+
+            var queryResult = query
+                .Skip(request.Size * request.PageNumber)
+                .Take(registrosApedir);
+
+
+            var registros = await _mapper
+                .ProjectTo<TViewModel>(queryResult)
+                .ToListAsync(cancellationToken);
+
+            return new BaseDbUtilsPaginatedData<TViewModel>(registros, request.PageNumber, request.Size, totalRegistros);
+        }
+
         public async Task<TViewModel> Handle(UpdateCommand<TViewModel> request, CancellationToken cancellationToken)
         {
             //var model = await _db.FindAsync(request.Id, cancellationToken);
@@ -68,7 +134,7 @@ namespace Rene.Utils.Db.Builder
             if (model == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
 
 
-            _mapper.Map<TViewModel, TModel>(request.ViewModel, model);
+            _mapper.Map(request.ViewModel, model);
 
 
             //Por si en el viewmodel envían la Pk a null como no puedo hacer inferencia del tipo jugamos un poquito con el esquema del dbcontext
@@ -99,114 +165,21 @@ namespace Rene.Utils.Db.Builder
             //await _dbContext.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<TViewModel>(entityEntry?.Entity);
-
-        }
-
-        public async Task<IEnumerable<TViewModel>> Handle(GetAllCommand<TViewModel> request, CancellationToken cancellationToken)
-        {
-            //var dev = await _db.AsNoTracking()
-
-            var dev = await _mapper
-                .ProjectTo<TViewModel>(_db.AsNoTracking())
-                .ToListAsync(cancellationToken);
-
-            return dev;
-            //return dev.Select(m => _mapper.Map<TViewModel>(m));
-        }
-
-        public async Task<TViewModel> Handle(GetCommand<TViewModel> request, CancellationToken cancellationToken)
-        {
-            var dev = await _db.FindAsync(request.Id);
-
-            if (dev == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
-
-            return _mapper.Map<TViewModel>(dev);
-        }
-
-        public async Task<bool> Handle(DeleteCommand<TViewModel> request, CancellationToken cancellationToken)
-        {
-            var result = await _db.FindAsync(request.Id);
-
-            if (result == null) throw new KeyNotFoundException($"Entidad no encontrada {request.Id}");
-
-            var entityEntry = _db.Remove(result);
-
-            //  await _dbContext.SaveChangesAsync(cancellationToken);
-
-            await SaveChanges(cancellationToken);
-
-            return true;
-        }
-
-        public async Task<IReadOnlyList<TViewModel>> Handle(GetBySpecCommand<TViewModel, TModel> request, CancellationToken cancellationToken)
-        {
-            var data = SpecificationEvaluator<TModel>.GetQuery(_db, request.Specification);
-
-            var dev = await _mapper
-                .ProjectTo<TViewModel>(data.AsNoTracking())
-                .ToListAsync(cancellationToken: cancellationToken);
-
-            return dev;
-
-            //return _mapper.Map<IReadOnlyList<TViewModel>>(data);
-
-
-        }
-
-        public async Task<IDbUtilsPaginatedData<TViewModel>> Handle(GetPaginatedCommand<TViewModel, TModel> request, CancellationToken cancellationToken)
-        {
-            if (request.Specification != null && request.Specification.IsPagingEnabled)
-            {
-                throw new ArgumentException("Specification must be without pagination settings");
-            }
-
-            //Hacemos que pida 1 registro de más para calcular si hay más páginas de registro 
-            var registrosApedir = request.Size + 1;
-
-            //Contemplamos si pide registros paginados sin filtros, el count será el total de registros
-            var query = request.Specification == null
-                        ? _db.AsNoTracking()
-                        : SpecificationEvaluator<TModel>.GetQuery(_db.AsNoTracking(), request.Specification);
-
-
-            var totalRegistros = await query.CountAsync(cancellationToken: cancellationToken);
-
-            var queryResult = query
-                .Skip(request.Size * request.PageNumber)
-                .Take(registrosApedir);
-
-
-            var registros = await _mapper
-                .ProjectTo<TViewModel>(queryResult)
-                .ToListAsync(cancellationToken: cancellationToken);
-
-            return new BaseDbUtilsPaginatedData<TViewModel>(registros, request.PageNumber, request.Size, totalRegistros);
-
         }
 
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {
-            if (_uow == null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>)))
-            {
-                return await _dbContext.SaveChangesAsync(cancellationToken);
-            }
+            if (_uow == null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>))) return await _dbContext.SaveChangesAsync(cancellationToken);
 
             return await _uow.SaveChangesAsync(cancellationToken);
-
         }
 
 
         private string GetKeyNameFromEntityType()
         {
-            if (_uow is FakeUnitOfWork<TDbContext> fakeUow)
-            {
-                return fakeUow.GetKeyNameFromEntityType<TModel>();
-            }
+            if (_uow is FakeUnitOfWork<TDbContext> fakeUow) return fakeUow.GetKeyNameFromEntityType<TModel>();
             return _dbContext.GetKeyNameFromEntityType<TModel>();
         }
-
     }
-
-
 }
