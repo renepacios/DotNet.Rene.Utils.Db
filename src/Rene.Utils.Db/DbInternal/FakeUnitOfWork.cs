@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Rene.Utils.Db.DbInternal
+﻿namespace Rene.Utils.Db.DbInternal
 {
+    using Microsoft.EntityFrameworkCore;
 
     //internal interface IFakeUnitOfWork : IDbUtilsUnitOfWork
     //{
@@ -9,17 +8,17 @@ namespace Rene.Utils.Db.DbInternal
     //    string GetKeyNameFromEntityType(Type type);
     //}
 
-    internal class FakeUnitOfWork<TDbContext>(TDbContext dbContext) 
+    public class FakeUnitOfWork<TDbContext>(TDbContext dbContext)
         : IDbUtilsUnitOfWork //, IFakeUnitOfWork
         where TDbContext : DbContext
     {
         public virtual int SaveChanges() => dbContext.SaveChanges();
 
 
-        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             => dbContext.SaveChangesAsync(cancellationToken);
 
-        public virtual Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
             => dbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 
 

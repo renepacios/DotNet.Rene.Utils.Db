@@ -19,13 +19,13 @@
   <ItemGroup>
     <Compile Remove="GenericGetTest.cs" />
     <Compile Remove="GenericWithSpecificationTest.cs" />
-    <Compile Remove="Mocks\AsyncEnumerable.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="$(FluentAssertions)" />
     <PackageReference Include="Magic.AutoMapper" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCore)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="$(Xunit)" />
@@ -41,5 +41,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Rene.Utils.Db\Rene.Utils.Db.csproj" />
+    <ProjectReference Include="..\Rene.Utils.Db.Tests.Common\Rene.Utils.Db.Tests.Common.csproj" />
   </ItemGroup>
 </Project>
