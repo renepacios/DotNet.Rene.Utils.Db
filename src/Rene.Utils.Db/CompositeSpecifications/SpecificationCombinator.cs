@@ -18,6 +18,7 @@ namespace Rene.Utils.Db.CompositeSpecifications
             var specificationEngine = new AndSpecificationEngine<T>(left, right);
             var s = specificationEngine.Build();
             return s;
+
         }
 
         /// <summary>

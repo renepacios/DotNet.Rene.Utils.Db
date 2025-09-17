@@ -1,94 +1,79 @@
 namespace Rene.Utils.Db.UnitTest
 {
-    using AutoMapper;
     using Builder;
     using Commands;
     using FluentAssertions;
+    using Helpers;
     using Microsoft.EntityFrameworkCore;
-    using Mocks;
     using Models;
     using Moq;
+    using Setup.Scenarios;
 
-    public class GenericAddTest //: IClassFixture<InfrastructureMocksFixture>
-
+    public class GenericAddTest
     {
-        private Mock<DbContext> MockDbContext { get; }
-        private Mock<IDbUtilsUnitOfWork> MockUow { get; }
-        private Mock<IMapper> MockMapper { get; }
-        private Mock<DbSet<Sample>> MockDbSet { get; }
-
-        public GenericAddTest()
-        {
-            var mocks = MockBuilders.Create();
-
-            MockDbContext = mocks.MockDbContext;
-            MockUow = mocks.MockUow;
-            MockMapper = mocks.MockMapper;
-            MockDbSet = mocks.MockDbSet;
-
-
-        }
-
         [Fact]
-        public async Task add_command_work_as_expected()
+        public async Task Add_Command_ShouldCallUnitOfWork_AndInsertEntity()
         {
+            // 1) We reuse the scenario from the fixture
+            var scenario = MockScenarioFactory.CreateSampleScenario(10);
+
+            // 2) Create the handler
+            var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
+                scenario.MapperMock.Object,
+                scenario.DbContextMock.Object,
+                scenario.UowMock.Object
+            );
+
+            // 3) Input command
             var vm = SampleDetailsViewModel.DefaultSampleDetails;
             var addCommand = new AddCommand<SampleDetailsViewModel>(vm);
-            var handler =
-                new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(MockMapper.Object,
-                    MockDbContext.Object, MockUow.Object);
 
-            var result = await handler.Handle(addCommand, new CancellationToken());
+            // 4) Execute
+            var result = await handler.Handle(addCommand, CancellationToken.None);
 
-            MockMapper.Verify(m => m.Map<Sample>(It.Is<SampleDetailsViewModel>(x => x == vm)), Times.Once);
+            // 5) Verify using helper methods
+            scenario.MapperMock.VerifyMappedToEntity(vm);
+            scenario.DbSetMock.VerifyAddAsyncCalledWith(vm);
 
-            MockDbSet
-                .Verify(
-                    m => m.AddAsync(
-                        It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description),
-                        It.IsAny<CancellationToken>()), Times.Once);
+            scenario.DbContextMock.VerifySaveChangesAsyncCalled();
+            scenario.UowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 
-            MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-            MockUow.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            scenario.MapperMock.VerifyMappedBackToViewModel(vm);
 
-            MockMapper.Verify(
-                m => m.Map<SampleDetailsViewModel>(It.Is<Sample>(s =>
-                    s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description)), Times.Once);
-
+            // 6) Assert 
             result.Should().BeOfType<SampleDetailsViewModel>();
-
             result.Id.Should().Be(99);
             result.Name.Should().Be("NoBodySample");
             result.Description.Should().Be("This is a fake description");
         }
 
         [Fact]
-        public async Task add_command_withoutUOW_work_as_expected()
+        public async Task Add_Command_WithoutUow_WorksAsExpected()
         {
+            // 1) Reuse the same scenario
+            var scenario = MockScenarioFactory.CreateSampleScenario(10);
+
+            // 2) Handler without UoW
+            var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
+                scenario.MapperMock.Object,
+                scenario.DbContextMock.Object,
+                null // no UoW
+            );
+
             var vm = SampleDetailsViewModel.DefaultSampleDetails;
             var addCommand = new AddCommand<SampleDetailsViewModel>(vm);
-            var handler =
-                new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(MockMapper.Object,
-                    MockDbContext.Object, null);
 
-            var result = await handler.Handle(addCommand, new CancellationToken());
+            // 3) Execute
+            var result = await handler.Handle(addCommand, CancellationToken.None);
 
-            MockMapper.Verify(m => m.Map<Sample>(It.Is<SampleDetailsViewModel>(x => x == vm)), Times.Once);
+            // 4) Verifications
+            scenario.MapperMock.VerifyMappedToEntity(vm);
+            scenario.DbSetMock.VerifyAddAsyncCalledWith(vm);
+            scenario.DbContextMock.VerifySaveChangesAsyncCalled();
+            scenario.MapperMock.VerifyMappedBackToViewModel(vm);
 
-            MockDbSet
-                .Verify(
-                    m => m.AddAsync(
-                        It.Is<Sample>(s => s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description),
-                        It.IsAny<CancellationToken>()), Times.Once);
-
-            MockDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-
-            MockMapper.Verify(
-                m => m.Map<SampleDetailsViewModel>(It.Is<Sample>(s =>
-                    s.Id == vm.Id && s.Name == vm.Name && s.Description == vm.Description)), Times.Once);
-
+            // 5) Check result
             result.Should().BeOfType<SampleDetailsViewModel>();
-
             result.Id.Should().Be(99);
             result.Name.Should().Be("NoBodySample");
             result.Description.Should().Be("This is a fake description");
@@ -101,5 +86,4 @@ namespace Rene.Utils.Db.UnitTest
          *
          */
     }
-
 }
