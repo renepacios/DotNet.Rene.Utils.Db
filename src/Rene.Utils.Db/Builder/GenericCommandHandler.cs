@@ -170,7 +170,12 @@
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {
-            if (_uow == null || _uow.GetType().IsAssignableFrom(typeof(FakeUnitOfWork<>))) return await _dbContext.SaveChangesAsync(cancellationToken);
+            if (_uow == null ||
+                (_uow.GetType().IsGenericType &&
+                 _uow.GetType().GetGenericTypeDefinition() == typeof(FakeUnitOfWork<>)))
+            {
+                return await _dbContext.SaveChangesAsync(cancellationToken);
+            }
 
             return await _uow.SaveChangesAsync(cancellationToken);
         }

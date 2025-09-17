@@ -148,8 +148,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             return builder.AddMediatRGenericHandlers(options);
-
-            return builder;
         }
     }
 }
