@@ -16,7 +16,7 @@ public class Sample : IEntity
         };
     }
 
-    public  static Sample Create(SampleDetailsViewModel sampleDetails)
+    public static Sample Create(SampleDetailsViewModel sampleDetails)
     {
         return new Sample
         {
@@ -25,6 +25,7 @@ public class Sample : IEntity
             Description = sampleDetails.Description
         };
     }
+
     public static Sample Create()
     {
         return new Sample
