@@ -2,7 +2,7 @@
   <Import Project="dependencies.props" />
   <PropertyGroup>
     <VersionPrefix>1</VersionPrefix>
-    <Version>$(VersionPrefix).0.0.0</Version>
+    <Version>$(VersionPrefix).1.0.0</Version>
 
     <FileVersion>$(Version)</FileVersion>
     <Authors>René Pacios</Authors>
