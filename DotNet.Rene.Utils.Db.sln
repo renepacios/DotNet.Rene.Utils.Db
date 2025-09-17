@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{014B1512-E59
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".repo", ".repo", "{3F35D740-DF0D-4E9B-B398-3513AE39E761}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
 		dependencies.props = dependencies.props
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
@@ -27,10 +28,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.App1", "samples\Rene.Utils.Db.Sample.App1\Rene.Utils.Db.Sample.App1.csproj", "{A52497B9-E6FE-4658-B810-7D59CBF2EE41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B645729B-4400-45F5-ADBA-DD8E39DE3833}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-		.github\workflows\nuget-publish.yml = .github\workflows\nuget-publish.yml
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.IntegrationTest", "tests\Rene.Utils.Db.IntegrationTest\Rene.Utils.Db.IntegrationTest.csproj", "{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Tests.Common", "tests\Rene.Utils.Db.Tests.Common\Rene.Utils.Db.Tests.Common.csproj", "{48F63334-2932-4C5F-BF4E-EA854E9D6657}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +55,14 @@ Global
 		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52497B9-E6FE-4658-B810-7D59CBF2EE41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F63334-2932-4C5F-BF4E-EA854E9D6657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F63334-2932-4C5F-BF4E-EA854E9D6657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F63334-2932-4C5F-BF4E-EA854E9D6657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F63334-2932-4C5F-BF4E-EA854E9D6657}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +72,8 @@ Global
 		{2A7C6363-558F-46CD-B845-6F4C453562E9} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
 		{0D601508-1812-44AB-B6DA-33997C5460B0} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
 		{A52497B9-E6FE-4658-B810-7D59CBF2EE41} = {F4C89FCF-6CA0-451E-94CB-511672EF6A93}
+		{D30EFFDD-6E3C-0C61-D8B3-47C7A0B9A2CA} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
+		{48F63334-2932-4C5F-BF4E-EA854E9D6657} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EEC9D2A-6210-4F6E-BF33-6E0B3765EDBC}
