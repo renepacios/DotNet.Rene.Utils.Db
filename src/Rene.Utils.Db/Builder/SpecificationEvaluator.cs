@@ -43,11 +43,7 @@ namespace Rene.Utils.Db.Builder
                     (current, include) => current.Include(include));
             }
 
-            //if (specification.IgnoreQueryFilters)
-            //{
-            //    query = query.IgnoreQueryFilters();
-            //}
-
+          
             // Apply ordering if expressions are set
             if (specification.OrderBy != null && specification.OrderBy.Count > 0)
             {
@@ -75,6 +71,26 @@ namespace Rene.Utils.Db.Builder
                     .Skip(specification.Skip)
                     .Take(specification.Take);
             }
+
+            if (specification.IgnoreQueryFilters)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            if (specification.AsNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+
+            ////TODO: Hacer con .net 10 ++
+            //if (specification.AsSplitQuery)
+            //{
+                
+            //        query = query.AsSplitQuery();
+    
+            //}
+
             return query;
         }
     }

@@ -43,10 +43,10 @@ namespace Rene.Utils.Db
         /// AsNoTracking
         /// </summary>
         bool AsNoTracking { get; }
-        /// <summary>
-        /// AsSplitQuery
-        /// </summary>
-        bool AsSplitQuery { get; }
+        ///// <summary>
+        ///// AsSplitQuery
+        ///// </summary>
+        //bool AsSplitQuery { get; }
 
 
         int Take { get; }
