@@ -83,6 +83,33 @@ namespace Rene.Utils.Db.CompositeSpecifications
             var sortSequence = sortQueryString.ToSortSequenceExpression<T>();
             return left.OrderBy(sortSequence);
         }
+
+
+        /// <summary>
+        /// Adds an include expression to the specification for eager loading related entities.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="specification">The specification to which the include expression will be added.</param>
+        /// <param name="includeExpression">The expression specifying the related entity to include.</param>
+        /// <returns>
+        /// The composite specification with the added include expression.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the specification does not support includes.
+        /// </exception>
+        public static IDbUtilsCompositeSpecification<T> AddIncludeSpecification<T>(this IDbUtilsSpecification<T> specification,
+            Expression<Func<T, object>> includeExpression)
+        {
+            if (specification is IDbUtilsCompositeSpecification<T> compositeSpecification)
+            {
+                compositeSpecification.Includes.Add(includeExpression);
+                return compositeSpecification;
+            }
+            else
+            {
+                throw new InvalidOperationException("The specification does not support includes.");
+            }
+        }
     }
 
 }
