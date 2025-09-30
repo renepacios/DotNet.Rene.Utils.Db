@@ -102,6 +102,10 @@ namespace Rene.Utils.Db.CompositeSpecifications
         {
             if (specification is IDbUtilsCompositeSpecification<T> compositeSpecification)
             {
+                if (compositeSpecification?.Includes == null)
+                {
+                    ((CompositeSpecification<T>)compositeSpecification).Includes ??= new List<Expression<Func<T, object>>>();
+                }
                 compositeSpecification.Includes.Add(includeExpression);
                 return compositeSpecification;
             }
