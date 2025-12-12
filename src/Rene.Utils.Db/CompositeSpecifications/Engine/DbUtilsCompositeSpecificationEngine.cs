@@ -130,8 +130,6 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
                 Criteria = newExpresion
             };
         }
-
-
     }
 
     internal class ORSpecificationEngine<T> : DbUtilsCompositeSpecificationEngine<T>
@@ -161,7 +159,6 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
 
     }
 
-
     internal class NotSpecificationEngine<T> : DbUtilsCompositeSpecificationEngine<T>
     {
         public NotSpecificationEngine(IDbUtilsSpecification<T> spe)
@@ -189,6 +186,48 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
 
     }
 
+    internal class OrderBySpecificationEngine<T> : DbUtilsCompositeSpecificationEngine<T>
+    {
+        public OrderBySpecificationEngine(IDbUtilsSpecification<T> left, IDbUtilsSpecification<T> right)
+            : base(left, right)
+        {
+
+        }
+
+        public override IDbUtilsCompositeSpecification<T> Build()
+        {
+            var parameter = Expression.Parameter(typeof(T));
+            var leftVisitor = new ParameterVisitor(LeftCriteria.Parameters[0], parameter);
+            var left = leftVisitor.Visit(LeftCriteria.Body);
+            var rightVisitor = new ParameterVisitor(RightCriteria.Parameters[0], parameter);
+            var right = rightVisitor.Visit(RightCriteria.Body);
+
+            var newExpresion = Expression.Lambda<Func<T, bool>>(
+                Expression.AndAlso(left, right), parameter);
+
+            var composite = new CompositeSpecification<T>
+            {
+                Criteria = newExpresion
+            };
+
+            if (Left is IDbUtilsCompositeSpecification<T> leftComposite && leftComposite.OrderBy.AnyNotNull())
+            {
+                composite.OrderBy = leftComposite.OrderBy.ToList();
+            }
+
+            if (Right is IDbUtilsCompositeSpecification<T> rightComposite && rightComposite.OrderBy.AnyNotNull())
+            {
+                if (!composite.OrderBy.AnyNotNull())
+                {
+                    composite.OrderBy = rightComposite.OrderBy.ToList();
+                }
+                else
+                {
+                    composite.OrderBy.AddRange(rightComposite.OrderBy);
+                }
+            }
+
+            return composite;
+        }
+    }
 }
-
-
