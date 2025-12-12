@@ -9,6 +9,11 @@ namespace Rene.Utils.Db.CompositeSpecifications.OrderByEngine
             if (!sortSequence.AnyNotNull())
                 throw new ArgumentNullException(nameof(sortSequence), "sortSequence cannot be null or empty");
 
+            if (Criteria == null && !Criterias.AnyNotNull())
+            {
+                Criteria = _ => true;
+            }
+
             if (!OrderBy.AnyNotNull())
             {
                 OrderBy = sortSequence.ToList();
@@ -17,7 +22,6 @@ namespace Rene.Utils.Db.CompositeSpecifications.OrderByEngine
             {
                 OrderBy.AddRange(sortSequence);
             }
-
         }
     }
 }
