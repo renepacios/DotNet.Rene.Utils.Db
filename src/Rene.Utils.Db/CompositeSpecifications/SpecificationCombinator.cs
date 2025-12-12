@@ -58,7 +58,7 @@ namespace Rene.Utils.Db.CompositeSpecifications
         public static IDbUtilsCompositeSpecification<T> OrderBy<T>(this IDbUtilsSpecification<T> left, ICollection<KeyValuePair<bool, Expression<Func<T, object>>>> sortSequence)
         {
             var orderSpecification = new OrderBySpecification<T>(sortSequence);
-            var specificationEngine = new AndSpecificationEngine<T>(left, orderSpecification);
+            var specificationEngine = new OrderBySpecificationEngine<T>(left, orderSpecification);
             var s = specificationEngine.Build();
             return s;
         }
