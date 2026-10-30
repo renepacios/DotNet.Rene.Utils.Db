@@ -1,6 +1,6 @@
-﻿namespace Rene.Utils.Db.Sample.App1.ViewModel
+﻿namespace Rene.Utils.Db.Sample.AutoMapper.ViewModel
 {
-    using AutoMapper;
+    using global::AutoMapper;
     using Magic.AutoMapper;
     using Model;
 

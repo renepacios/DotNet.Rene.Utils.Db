@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Rene.Utils.Db.Sample.App1.Model;
+using Rene.Utils.Db.Sample.AutoMapper.Model;
 
-namespace Rene.Utils.Db.Sample.App1.Controllers
+namespace Rene.Utils.Db.Sample.AutoMapper.Controllers
 {
     using Commands;
     using MediatR;

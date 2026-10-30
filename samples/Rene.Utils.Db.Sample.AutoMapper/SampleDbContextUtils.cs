@@ -1,6 +1,6 @@
-using Rene.Utils.Db.Sample.App1.Model;
+using Rene.Utils.Db.Sample.AutoMapper.Model;
 
-namespace Rene.Utils.Db.Sample.App1;
+namespace Rene.Utils.Db.Sample.AutoMapper;
 
 public static class SampleDbContextUtils
 {

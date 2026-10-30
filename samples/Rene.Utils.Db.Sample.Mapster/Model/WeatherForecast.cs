@@ -1,4 +1,4 @@
-namespace Rene.Utils.Db.Sample.App1.Model
+﻿namespace Rene.Utils.Db.Sample.Mapster.Model
 {
     public class WeatherForecast
     {

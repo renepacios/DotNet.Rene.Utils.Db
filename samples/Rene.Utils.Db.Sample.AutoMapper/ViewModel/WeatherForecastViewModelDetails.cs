@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Magic.AutoMapper;
-using Rene.Utils.Db.Sample.App1.Model;
+using Rene.Utils.Db.Sample.AutoMapper.Model;
 
-namespace Rene.Utils.Db.Sample.App1.ViewModel;
+namespace Rene.Utils.Db.Sample.AutoMapper.ViewModel;
 
 [AutoMap(typeof(WeatherForecast))]
 public class WeatherForecastViewModelDetails : WeatherForecastViewModel

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Rene.Utils.Db.Sample.App1.Controllers;
+namespace Rene.Utils.Db.Sample.AutoMapper.Controllers;
 
 public class MetaController : ControllerBase
 {

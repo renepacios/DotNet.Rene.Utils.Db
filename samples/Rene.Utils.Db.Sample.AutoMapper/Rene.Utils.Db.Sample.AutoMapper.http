@@ -1,4 +1,4 @@
-@Rene.Utils.Db.Sample.App1_HostAddress = http://localhost:5237
+@Rene.Utils.Db.Sample.AutoMapper_HostAddress = http://localhost:5237
 ### https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0
 
 @baseUrl = http://localhost:5237
@@ -38,11 +38,11 @@ DELETE {{baseUrl}}/weatherforecast/1
 Accept: application/json
 
 
-GET {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast
+GET {{Rene.Utils.Db.Sample.AutoMapper_HostAddress}}/weatherforecast
 
 ###
 
-POST {{Rene.Utils.Db.Sample.App1_HostAddress}}/weatherforecast
+POST {{Rene.Utils.Db.Sample.AutoMapper_HostAddress}}/weatherforecast
 Content-Type: application/json
 
 {

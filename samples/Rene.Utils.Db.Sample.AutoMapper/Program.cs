@@ -1,7 +1,7 @@
 
 
 
-namespace Rene.Utils.Db.Sample.App1
+namespace Rene.Utils.Db.Sample.AutoMapper
 {
     using Microsoft.EntityFrameworkCore;
 
