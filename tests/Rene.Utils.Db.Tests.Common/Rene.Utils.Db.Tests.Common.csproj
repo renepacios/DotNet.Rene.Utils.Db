@@ -5,7 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <!-- 
+        1903 - para que ignore el warnig de AutoMapper.Extensions.Microsoft.DependencyInjection
+        Se manteiene por retrocompatibilidad con versiones anteriores de .NET, pero se recomienda actualizar a la versión más reciente de AutoMapper.Extensions.Microsoft.DependencyInjection para evitar problemas futuros.
+    -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Magic.AutoMapper" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
