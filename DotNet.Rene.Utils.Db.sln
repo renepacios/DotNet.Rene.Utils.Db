@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Abstractions"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F4C89FCF-6CA0-451E-94CB-511672EF6A93}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.App1", "samples\Rene.Utils.Db.Sample.App1\Rene.Utils.Db.Sample.App1.csproj", "{A52497B9-E6FE-4658-B810-7D59CBF2EE41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rene.Utils.Db.Sample.AutoMapper", "samples\Rene.Utils.Db.Sample.AutoMapper\Rene.Utils.Db.Sample.AutoMapper.csproj", "{A52497B9-E6FE-4658-B810-7D59CBF2EE41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B645729B-4400-45F5-ADBA-DD8E39DE3833}"
 EndProject
@@ -36,6 +36,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.AutoMapper", "src\Rene.Utils.Db.AutoMapper\Rene.Utils.Db.AutoMapper.csproj", "{69403DEC-C16B-41D3-B73D-F66BBB972C1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Mapster", "src\Rene.Utils.Db.Mapster\Rene.Utils.Db.Mapster.csproj", "{8F1A64A7-0BD2-46FB-8FFE-251D224C82A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Sample.Mapster", "samples\Rene.Utils.Db.Sample.Mapster\Rene.Utils.Db.Sample.Mapster.csproj", "{2379F423-343D-48DD-A6D9-9ACD2EA75CF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rene.Utils.Db.Sample.ManualMapper", "samples\Rene.Utils.Db.Sample.ManualMapper\Rene.Utils.Db.Sample.ManualMapper.csproj", "{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,14 @@ Global
 		{8F1A64A7-0BD2-46FB-8FFE-251D224C82A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F1A64A7-0BD2-46FB-8FFE-251D224C82A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F1A64A7-0BD2-46FB-8FFE-251D224C82A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2379F423-343D-48DD-A6D9-9ACD2EA75CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2379F423-343D-48DD-A6D9-9ACD2EA75CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2379F423-343D-48DD-A6D9-9ACD2EA75CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2379F423-343D-48DD-A6D9-9ACD2EA75CF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +100,8 @@ Global
 		{48F63334-2932-4C5F-BF4E-EA854E9D6657} = {15F0D4DB-EC3C-49AD-B43C-AF20F30C0313}
 		{69403DEC-C16B-41D3-B73D-F66BBB972C1C} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
 		{8F1A64A7-0BD2-46FB-8FFE-251D224C82A9} = {014B1512-E59D-4FF0-B4AA-F4E41CB3B96D}
+		{2379F423-343D-48DD-A6D9-9ACD2EA75CF8} = {F4C89FCF-6CA0-451E-94CB-511672EF6A93}
+		{1AE9DA9F-EA49-49F0-89AC-E6552B6AA60F} = {F4C89FCF-6CA0-451E-94CB-511672EF6A93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EEC9D2A-6210-4F6E-BF33-6E0B3765EDBC}

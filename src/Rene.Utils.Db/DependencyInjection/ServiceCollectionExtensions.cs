@@ -1,126 +1,120 @@
 ﻿// ReSharper disable once CheckNamespace
 
-
-// ReSharper disable once CheckNamespace
+using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    using AspNetCore.Builder;
     using EntityFrameworkCore;
+    using Extensions;
     using Rene.Utils.Db;
     using Rene.Utils.Db.Builder;
     using Rene.Utils.Db.DbInternal;
     using System.Reflection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     public static class ServiceCollectionExtensions
     {
-        public static WebApplicationBuilder AddDbUtils<TDbContext>(this WebApplicationBuilder builder
-            , Action<DbUtilsOptions> setup, params Assembly[] assemblies)
-            where TDbContext : DbContext
-        {
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            _ = setup ?? throw new ArgumentNullException(nameof(setup));
-
-
-            var options = new DbUtilsOptions();
-
-            setup?.Invoke(options);
-            options.DbContextType = typeof(TDbContext);
-
-            //TODO: Ver si se puede hacer algo con el UnitOfWork
-            builder.RegisterFallBackUow<TDbContext>(options);
-
-            return builder.AddDbUtils(options, assemblies);
-        }
-
-        public static WebApplicationBuilder AddDbUtils<TDbContext, TUnitOfWork>(this WebApplicationBuilder builder,
+        public static IHostApplicationBuilder AddDbUtils<TDbContext>(this IHostApplicationBuilder builder,
             Action<DbUtilsOptions> setup, params Assembly[] assemblies)
             where TDbContext : DbContext
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.Services.AddDbUtils<TDbContext>(setup, assemblies);
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddDbUtils<TDbContext, TUnitOfWork>(this IHostApplicationBuilder builder,
+            Action<DbUtilsOptions> setup, params Assembly[] assemblies)
+            where TDbContext : DbContext
+            where TUnitOfWork : IDbUtilsUnitOfWork
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.Services.AddDbUtils<TDbContext, TUnitOfWork>(setup, assemblies);
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddDbUtils<TDbContext>(this IHostApplicationBuilder builder, params Assembly[] assemblies)
+            where TDbContext : DbContext
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.Services.AddDbUtils<TDbContext>(assemblies);
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddDbUtils<TDbContext, TUnitOfWork>(this IHostApplicationBuilder builder, params Assembly[] assemblies)
+            where TDbContext : DbContext
+            where TUnitOfWork : IDbUtilsUnitOfWork
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.Services.AddDbUtils<TDbContext, TUnitOfWork>(assemblies);
+            return builder;
+        }
+
+        public static IServiceCollection AddDbUtils<TDbContext>(this IServiceCollection services,
+            Action<DbUtilsOptions> setup, params Assembly[] assemblies)
+            where TDbContext : DbContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = setup ?? throw new ArgumentNullException(nameof(setup));
 
             var options = new DbUtilsOptions();
-            setup?.Invoke(options);
+            setup(options);
+            options.DbContextType = typeof(TDbContext);
 
+            return services.AddDbUtils<TDbContext>(options, assemblies);
+        }
+
+        public static IServiceCollection AddDbUtils<TDbContext, TUnitOfWork>(this IServiceCollection services,
+            Action<DbUtilsOptions> setup, params Assembly[] assemblies)
+            where TDbContext : DbContext
+            where TUnitOfWork : IDbUtilsUnitOfWork
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = setup ?? throw new ArgumentNullException(nameof(setup));
+
+            var options = new DbUtilsOptions();
+            setup(options);
             options.DbContextType = typeof(TDbContext);
             options.UnitOfWorkType = typeof(TUnitOfWork);
 
-
-            return builder.AddDbUtils(options, assemblies);
+            return services.AddDbUtils<TDbContext>(options, assemblies);
         }
 
-        public static WebApplicationBuilder AddDbUtils<TDbContext>(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        public static IServiceCollection AddDbUtils<TDbContext>(this IServiceCollection services, params Assembly[] assemblies)
             where TDbContext : DbContext
-
         {
-            //_ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            var options = new DbUtilsOptions { DbContextType = typeof(TDbContext) };
 
-            var options = new DbUtilsOptions
-            {
-                DbContextType = typeof(TDbContext)
-            };
-
-
-            //services.RegisterFallBackUOW(options);
-
-            return builder.AddDbUtils(options, assemblies);
+            return services.AddDbUtils<TDbContext>(options, assemblies);
         }
 
-
-        public static WebApplicationBuilder AddDbUtils<TDbContext, TUnitOfWork>(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        public static IServiceCollection AddDbUtils<TDbContext, TUnitOfWork>(this IServiceCollection services, params Assembly[] assemblies)
             where TDbContext : DbContext
+            where TUnitOfWork : IDbUtilsUnitOfWork
         {
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            //_ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
             var options = new DbUtilsOptions
             {
                 DbContextType = typeof(TDbContext),
                 UnitOfWorkType = typeof(TUnitOfWork)
             };
 
-            return builder.AddDbUtils(options, assemblies);
+            return services.AddDbUtils<TDbContext>(options, assemblies);
         }
 
-
-        public static IServiceCollection AddDbUtils<TDbContext>(
-            this IServiceCollection serviceCollection,
-            params Assembly[] assemblies)
+        private static IServiceCollection AddDbUtils<TDbContext>(this IServiceCollection services,
+            DbUtilsOptions options, Assembly[] assemblies)
             where TDbContext : DbContext
         {
-            _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            // Only when no unit of work has been configured (UseOwnUnitOfWork or TUnitOfWork), so it is never overwritten.
+            if (options.UnitOfWorkType == null) services.RegisterFallBackUow<TDbContext>(options);
 
-            var options = new DbUtilsOptions { DbContextType = typeof(TDbContext) };
-            serviceCollection.RegisterFallBackUow<TDbContext>(options);
-
-            return serviceCollection.AddDbUtils(options, assemblies);
-        }
-
-        public static IServiceCollection AddDbUtils<TDbContext>(
-            this IServiceCollection serviceCollection,
-            Action<DbUtilsOptions> setup,
-            params Assembly[] assemblies)
-            where TDbContext : DbContext
-        {
-            _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            _ = setup ?? throw new ArgumentNullException(nameof(setup));
-
-            var options = new DbUtilsOptions();
-            setup(options);
-            options.DbContextType = typeof(TDbContext);
-            serviceCollection.RegisterFallBackUow<TDbContext>(options);
-
-            return serviceCollection.AddDbUtils(options, assemblies);
-        }
-
-        private static IServiceCollection AddDbUtils(
-            this IServiceCollection services,
-            DbUtilsOptions options = null,
-            Assembly[] assemblies = null)
-        {
             services.RegisterMapper(options);
 
             if (assemblies == null || assemblies.Length <= 0) return services.AddMediatRGenericHandlers(options);
@@ -131,27 +125,14 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Registra un fake UOW para cuando generemos los genéricos decirle que no use esto y use el dbcontext directamente
-        /// Es para evitar hacer 2
+        /// Registers a fake unit of work that uses the DbContext directly, for when no unit of work has been configured.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        private static WebApplicationBuilder RegisterFallBackUow<TDbContext>(this WebApplicationBuilder builder, DbUtilsOptions options)
+        private static void RegisterFallBackUow<TDbContext>(this IServiceCollection services, DbUtilsOptions options)
             where TDbContext : DbContext
         {
             options.UnitOfWorkType = typeof(FakeUnitOfWork<TDbContext>);
-            builder.Services.AddScoped<FakeUnitOfWork<TDbContext>>();
-            //services.AddScoped<IDbUtilsUnitOfWork, FakeUnitOfWork>();
-            return builder;
-        }
-
-        private static IServiceCollection RegisterFallBackUow<TDbContext>(this IServiceCollection services, DbUtilsOptions options)
-            where TDbContext : DbContext
-        {
-            options.UnitOfWorkType = typeof(FakeUnitOfWork<TDbContext>);
-            services.AddScoped<FakeUnitOfWork<TDbContext>>();
-            services.AddScoped<IDbUtilsUnitOfWork, FakeUnitOfWork<TDbContext>>();
-            return services;
+            services.TryAddScoped<FakeUnitOfWork<TDbContext>>();
+            services.TryAddScoped<IDbUtilsUnitOfWork, FakeUnitOfWork<TDbContext>>();
         }
 
         /// <summary>
@@ -160,26 +141,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         private static void RegisterMapper(this IServiceCollection services, DbUtilsOptions options)
         {
-            if (options?.MapperFactory == null) return;
+            if (options.MapperFactory == null) return;
 
             services.Replace(ServiceDescriptor.Scoped(options.MapperFactory));
-        }
-
-        private static WebApplicationBuilder AddDbUtils(this WebApplicationBuilder builder,
-            DbUtilsOptions options = null, Assembly[] assemblies = null)
-        {
-            // Type dbcontextType = typeof(TDbContext);
-            var services = builder.Services;
-            services.RegisterMapper(options);
-
-            if (assemblies != null && assemblies.Length > 0)
-            {
-                foreach (var assembly in assemblies) builder.AddMediatRGenericHandlers(options, assembly);
-
-                return builder;
-            }
-
-            return builder.AddMediatRGenericHandlers(options);
         }
     }
 }
