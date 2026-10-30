@@ -396,8 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/samples/Rene.Utils.Db.Sample.App1/Database.db
-/samples/Rene.Utils.Db.Sample.App1/Database.db-shm
-/samples/Rene.Utils.Db.Sample.App1/Database.db-wal
 /src/Rene.Utils.Db/Properties/launchSettings.json
 *.lutconfig
+/samples/*/Database.db
+/samples/*/Database.db-shm
+/samples/*/Database.db-wal
