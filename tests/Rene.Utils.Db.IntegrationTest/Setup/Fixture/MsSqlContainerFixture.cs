@@ -60,7 +60,7 @@ namespace Rene.Utils.Db.IntegrationTest
             services.AddDbContext<TestingDbContext>(options => options.UseSqlServer($"{_container.GetConnectionString()};Database=AdventureWorksLT2022;"));
             services.AddMediatR(configure => configure.RegisterServicesFromAssemblies(typeof(TestingDbContext).Assembly));
             services.AddMagicAutoMapper().AddAutoMapper(typeof(TestingDbContext).Assembly);
-            services.AddDbUtils<TestingDbContext>(typeof(TestingDbContext).Assembly);
+            services.AddDbUtils<TestingDbContext>(options => options.UseAutoMapper(), typeof(TestingDbContext).Assembly);
 
             var provider = services.BuildServiceProvider();
 
