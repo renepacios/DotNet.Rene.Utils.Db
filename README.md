@@ -111,6 +111,18 @@ public class ProductsController(ISender sender) : ControllerBase
 - [Rene.Utils.Db.Sample.AutoMapper](samples/Rene.Utils.Db.Sample.AutoMapper): mapping with AutoMapper.
 - [Rene.Utils.Db.Sample.Mapster](samples/Rene.Utils.Db.Sample.Mapster): mapping with Mapster.
 - [Rene.Utils.Db.Sample.ManualMapper](samples/Rene.Utils.Db.Sample.ManualMapper): manual mappings without any mapping library.
+
+## Running tests
+
+The integration tests require Docker and the AdventureWorksLT2022 backup, which is not stored in the repository. Download it into `resources/backups` before running `dotnet test`:
+
+```bash
+mkdir -p resources/backups
+curl --fail --location \
+  https://github.com/microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksLT2022.bak \
+  --output resources/backups/AdventureWorksLT2022.bak
+```
+
 ## Mapping configuration
 The library doesn't depend on any mapping library. The mapper used by the generic handlers (`IDbUtilsMapper`) is configured in `DbUtilsOptions`:
 
