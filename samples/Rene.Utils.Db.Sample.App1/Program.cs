@@ -30,10 +30,7 @@ namespace Rene.Utils.Db.Sample.App1
 
             builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<Program>());
 
-            builder.AddDbUtils<SampleDbContext>(options =>
-            {
-
-            }, typeof(Program).Assembly);
+            builder.AddDbUtils<SampleDbContext>(options => options.UseAutoMapper(), typeof(Program).Assembly);
 
             var app = builder.Build();
 

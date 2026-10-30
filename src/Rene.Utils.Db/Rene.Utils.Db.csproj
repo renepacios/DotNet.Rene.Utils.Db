@@ -28,7 +28,6 @@
   <ItemGroup>
     <!--Sopesar Eliminar dependencia con dependencies.props-->
     <PackageReference Include="MediatR" Version="$(MediatR)" />
-    <PackageReference Include="AutoMapper" Version="$(Automapper)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCore)" />
     <PackageReference Include="Rene.Utils.Core" Version="$(ReneUtils)" />
   </ItemGroup>

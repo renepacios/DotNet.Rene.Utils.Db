@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using Rene.Utils.Db.Builder;
     using Rene.Utils.Db.DbInternal;
     using System.Reflection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     public static class ServiceCollectionExtensions
     {
@@ -98,11 +99,30 @@ namespace Microsoft.Extensions.DependencyInjection
             return serviceCollection.AddDbUtils(options, assemblies);
         }
 
+        public static IServiceCollection AddDbUtils<TDbContext>(
+            this IServiceCollection serviceCollection,
+            Action<DbUtilsOptions> setup,
+            params Assembly[] assemblies)
+            where TDbContext : DbContext
+        {
+            _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            _ = setup ?? throw new ArgumentNullException(nameof(setup));
+
+            var options = new DbUtilsOptions();
+            setup(options);
+            options.DbContextType = typeof(TDbContext);
+            serviceCollection.RegisterFallBackUow<TDbContext>(options);
+
+            return serviceCollection.AddDbUtils(options, assemblies);
+        }
+
         private static IServiceCollection AddDbUtils(
             this IServiceCollection services,
             DbUtilsOptions options = null,
             Assembly[] assemblies = null)
         {
+            services.RegisterMapper(options);
+
             if (assemblies == null || assemblies.Length <= 0) return services.AddMediatRGenericHandlers(options);
 
             foreach (var assembly in assemblies) services.AddMediatRGenericHandlers(options, assembly);
@@ -134,11 +154,23 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Registers the mapper configured in <see cref="DbUtilsOptions"/>.
+        /// When no mapper is configured, an <see cref="IDbUtilsMapper"/> must be registered manually in the container.
+        /// </summary>
+        private static void RegisterMapper(this IServiceCollection services, DbUtilsOptions options)
+        {
+            if (options?.MapperFactory == null) return;
+
+            services.Replace(ServiceDescriptor.Scoped(options.MapperFactory));
+        }
+
         private static WebApplicationBuilder AddDbUtils(this WebApplicationBuilder builder,
             DbUtilsOptions options = null, Assembly[] assemblies = null)
         {
             // Type dbcontextType = typeof(TDbContext);
             var services = builder.Services;
+            services.RegisterMapper(options);
 
             if (assemblies != null && assemblies.Length > 0)
             {

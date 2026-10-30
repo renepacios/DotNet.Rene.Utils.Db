@@ -1,6 +1,5 @@
 ﻿namespace Rene.Utils.Db.UnitTest.Setup.Scenarios
 {
-    using AutoMapper;
     using Factories;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -22,14 +21,14 @@
     {
         internal Mock<DbContext> DbContextMock { get; }
         internal Mock<IDbUtilsUnitOfWork>? UowMock { get; }
-        internal Mock<IMapper> MapperMock { get; }
+        internal Mock<IDbUtilsMapper> MapperMock { get; }
         internal Mock<DbSet<T>> DbSetMock { get; }
         internal List<T> Data { get; }
 
         internal MockScenario(
             Mock<DbContext> dbContextMock,
             Mock<IDbUtilsUnitOfWork>? uowMock,
-            Mock<IMapper> mapperMock,
+            Mock<IDbUtilsMapper> mapperMock,
             Mock<DbSet<T>> dbSetMock,
             List<T> data)
         {
@@ -60,7 +59,7 @@
         /// <typeparam name="T">The entity type.</typeparam>
         /// <param name="seedData">In-memory list of seed data for the mocked DbSet.</param>
         /// <param name="mapperFactory">Function that creates a mapper mock. </param>
-        internal static MockScenario<T> CreateScenario<T>(List<T> seedData, Func<Mock<IMapper>> mapperFactory, UowStrategy strategy)
+        internal static MockScenario<T> CreateScenario<T>(List<T> seedData, Func<Mock<IDbUtilsMapper>> mapperFactory, UowStrategy strategy)
             where T : class, IEntity
         {
             // 1) Create DbSet mock

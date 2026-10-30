@@ -42,5 +42,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Rene.Utils.Db\Rene.Utils.Db.csproj" />
     <ProjectReference Include="..\Rene.Utils.Db.Tests.Common\Rene.Utils.Db.Tests.Common.csproj" />
+    <ProjectReference Include="..\..\src\Rene.Utils.Db.AutoMapper\Rene.Utils.Db.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\Rene.Utils.Db.Mapster\Rene.Utils.Db.Mapster.csproj" />
   </ItemGroup>
 </Project>

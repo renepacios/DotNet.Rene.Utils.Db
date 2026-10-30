@@ -14,6 +14,7 @@
     <PropertyGroup Label="EF Versions">
         <EntityFrameworkCore>8.0.14</EntityFrameworkCore>
         <Automapper>13.0.1</Automapper>
+        <Mapster>7.4.0</Mapster>
         <ReneUtils>1.4.0</ReneUtils>
         <VersioningApiExplorer>5.0.0</VersioningApiExplorer>
         <FluentValidation>10.4.0</FluentValidation>
