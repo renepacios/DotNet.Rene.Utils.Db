@@ -14,7 +14,7 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 ## Getting Started
 
 ### Prerequisites
-- .NET 8.0
+- .NET 10.0
 - Entity Framework Core
 - MediatR
 - Optional: AutoMapper (`Rene.Utils.Db.AutoMapper`) or Mapster (`Rene.Utils.Db.Mapster`)

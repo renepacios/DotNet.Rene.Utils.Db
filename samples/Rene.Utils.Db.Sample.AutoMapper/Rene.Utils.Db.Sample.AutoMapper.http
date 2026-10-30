@@ -1,5 +1,5 @@
 @Rene.Utils.Db.Sample.AutoMapper_HostAddress = http://localhost:5237
-### https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0
+### https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-10.0
 
 @baseUrl = http://localhost:5237
 

@@ -83,7 +83,9 @@
         {
             var internalEntityEntry = new InternalEntityEntry(
                 new Mock<IStateManager>().Object,
-                new RuntimeEntityType("T", typeof(T), false, null!, null, null, ChangeTrackingStrategy.Snapshot, null, false, null),
+                new RuntimeEntityType("T", typeof(T), false, null!, null, ChangeTrackingStrategy.Snapshot, null, false, null, null,
+                    derivedTypesCount: 0, propertyCount: 0, complexPropertyCount: 0, navigationCount: 0, skipNavigationCount: 0,
+                    servicePropertyCount: 0, unnamedIndexCount: 0, namedIndexCount: 0, keyCount: 0, triggerCount: 0, foreignKeyCount: 0),
                 entity);
 
             var entryMock = new Mock<EntityEntry<T>>(internalEntityEntry);
