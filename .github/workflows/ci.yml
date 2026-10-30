@@ -30,5 +30,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Download integration test database
+      run: |
+        mkdir -p resources/backups
+        curl --fail --location --retry 3 \
+          https://github.com/microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksLT2022.bak \
+          --output resources/backups/AdventureWorksLT2022.bak
     - name: Test
       run: dotnet test --no-build --verbosity normal
