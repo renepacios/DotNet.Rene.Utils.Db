@@ -18,7 +18,6 @@ namespace Rene.Utils.Db.IntegrationTest
     /// </summary>
     public class MsSqlContainerFixture : IAsyncLifetime
     {
-        private const string LocalBackupPath = @"resources\backups";
         private const string TargetBackupPath = "/backups/mssql/";
         private const string BackupFileName = "AdventureWorksLT2022.bak";
 
@@ -29,7 +28,15 @@ namespace Rene.Utils.Db.IntegrationTest
 
         public MsSqlContainerFixture()
         {
-            var backupPath = Path.Combine(GetSolutionDirectoryInfo(), LocalBackupPath, BackupFileName);
+            var backupPath = Path.Combine(GetSolutionDirectoryInfo(), "resources", "backups", BackupFileName);
+            if (!File.Exists(backupPath))
+            {
+                throw new FileNotFoundException(
+                    $"The integration test database backup was not found at '{backupPath}'. " +
+                    "Download AdventureWorksLT2022.bak from the Microsoft SQL Server samples release into resources/backups.",
+                    backupPath);
+            }
+
             var info = new FileInfo(backupPath);
 
             _container = new MsSqlBuilder()
@@ -60,7 +67,7 @@ namespace Rene.Utils.Db.IntegrationTest
             services.AddDbContext<TestingDbContext>(options => options.UseSqlServer($"{_container.GetConnectionString()};Database=AdventureWorksLT2022;"));
             services.AddMediatR(configure => configure.RegisterServicesFromAssemblies(typeof(TestingDbContext).Assembly));
             services.AddMagicAutoMapper().AddAutoMapper(typeof(TestingDbContext).Assembly);
-            services.AddDbUtils<TestingDbContext>(typeof(TestingDbContext).Assembly);
+            services.AddDbUtils<TestingDbContext>(options => options.UseAutoMapper(), typeof(TestingDbContext).Assembly);
 
             var provider = services.BuildServiceProvider();
 

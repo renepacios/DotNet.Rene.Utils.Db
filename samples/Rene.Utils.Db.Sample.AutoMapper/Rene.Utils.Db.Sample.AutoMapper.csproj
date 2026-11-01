@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+    </PropertyGroup>
+  <PropertyGroup>
+    <!-- Ignora las advertencias específicas en el proyecto 
+        1903 - para que ignore el warnig de AutoMapper.Extensions.Microsoft.DependencyInjection
+        Se manteiene por retrocompatibilidad con versiones anteriores de .NET, pero se recomienda actualizar a la versión más reciente de AutoMapper.Extensions.Microsoft.DependencyInjection para evitar problemas futuros.
+    -->
+    <NoWarn>$(NoWarn);NU5128;NU1605;NU1903</NoWarn>
+  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Magic.AutoMapper.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Rene.Utils.Db\Rene.Utils.Db.csproj" />
+        <ProjectReference Include="..\..\src\Rene.Utils.Db.AutoMapper\Rene.Utils.Db.AutoMapper.csproj" />
+    </ItemGroup>
+
+</Project>

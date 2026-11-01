@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>DotNet Rene Utils Db - AutoMapper</Title>
+    <Description>AutoMapper integration for Rene.Utils.Db. Use options.UseAutoMapper() in AddDbUtils to map view models with AutoMapper.</Description>
+    <PackageProjectUrl>https://github.com/renepacios/DotNet.Rene.Utils.Db</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/renepacios/DotNet.Rene.Utils.Db</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- 
+        1903 - para que ignore el warnig de AutoMapper.Extensions.Microsoft.DependencyInjection
+        Se manteiene por retrocompatibilidad con versiones anteriores de .NET, pero se recomienda actualizar a la versión más reciente de AutoMapper.Extensions.Microsoft.DependencyInjection para evitar problemas futuros.
+    -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rene.Utils.Db\Rene.Utils.Db.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

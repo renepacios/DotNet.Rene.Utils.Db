@@ -1,6 +1,5 @@
 ﻿namespace Rene.Utils.Db.Builder
 {
-    using AutoMapper;
     using Commands;
     using DbInternal;
     using Microsoft.EntityFrameworkCore;
@@ -22,12 +21,12 @@
         private readonly DbSet<TModel> _db;
 
         private readonly TDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IDbUtilsMapper _mapper;
 
         private readonly Tuow _uow;
         //   private readonly ISimpleCrudServiceAsync<TModel> _db;
 
-        public GenericCommandHandler(IMapper mapper, TDbContext dbContext, Tuow uow)
+        public GenericCommandHandler(IDbUtilsMapper mapper, TDbContext dbContext, Tuow uow)
         {
             _mapper = mapper;
             _dbContext = dbContext;
@@ -71,9 +70,8 @@
         {
             //var dev = await _db.AsNoTracking()
 
-            var dev = await _mapper
-                .ProjectTo<TViewModel>(_db.AsNoTracking())
-                .ToListAsync(cancellationToken);
+            var dev = await ToViewModelListAsync(_db.AsNoTracking(), cancellationToken);
+
 
             return dev;
             //return dev.Select(m => _mapper.Map<TViewModel>(m));
@@ -83,9 +81,8 @@
         {
             var data = SpecificationEvaluator<TModel>.GetQuery(_db, request.Specification);
 
-            var dev = await _mapper
-                .ProjectTo<TViewModel>(data.AsNoTracking())
-                .ToListAsync(cancellationToken);
+            var dev = await ToViewModelListAsync(data.AsNoTracking(), cancellationToken);
+
 
             return dev;
 
@@ -119,9 +116,8 @@
                 .Take(registrosApedir);
 
 
-            var registros = await _mapper
-                .ProjectTo<TViewModel>(queryResult)
-                .ToListAsync(cancellationToken);
+            var registros = await ToViewModelListAsync(queryResult, cancellationToken);
+
 
             return new BaseDbUtilsPaginatedData<TViewModel>(registros, request.PageNumber, request.Size, totalRegistros);
         }
@@ -167,6 +163,20 @@
             return _mapper.Map<TViewModel>(entityEntry?.Entity);
         }
 
+
+        private async Task<List<TViewModel>> ToViewModelListAsync(IQueryable<TModel> query, CancellationToken cancellationToken)
+        {
+            if (_mapper.CanProject(typeof(TModel), typeof(TViewModel)))
+            {
+                return await _mapper
+                    .ProjectTo<TViewModel>(query)
+                    .ToListAsync(cancellationToken);
+            }
+
+            // The mapper can't translate the projection to the database: materialize the entities and map them in memory
+            var entities = await query.ToListAsync(cancellationToken);
+            return entities.Select(e => _mapper.Map<TViewModel>(e)).ToList();
+        }
 
         private async Task<int> SaveChanges(CancellationToken cancellationToken)
         {

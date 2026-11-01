@@ -1,9 +1,7 @@
 ﻿namespace Rene.Utils.Db.UnitTest.Helpers
 {
-    using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using Models;
-    using System.Linq.Expressions;
 
     internal static class MockVerificationHelpers
     {
@@ -53,18 +51,18 @@
             dbSetMock.Verify(m => m.Remove(It.Is<Sample>(s => s.Id == id)), times ?? Times.Once());
         }
 
-        internal static void VerifyMappedToEntity(this Mock<IMapper> mapperMock, SampleDetailsViewModel vm, Times? times = null)
+        internal static void VerifyMappedToEntity(this Mock<IDbUtilsMapper> mapperMock, SampleDetailsViewModel vm, Times? times = null)
         {
             mapperMock.Verify(m =>
                     m.Map<Sample>(It.Is<SampleDetailsViewModel>(x => x == vm)),
                 times ?? Times.Once());
         }
 
-        internal static void VerifyMappedToEntity(this Mock<IMapper> mapperMock, SampleDetailsViewModel vm, int id, Times? times = null)
+        internal static void VerifyMappedToEntity(this Mock<IDbUtilsMapper> mapperMock, SampleDetailsViewModel vm, int id, Times? times = null)
         {
             mapperMock.Verify(m =>
-                m.Map<SampleViewModel, Sample>(
-                    It.Is<SampleViewModel>(s => s.Equals(vm)),
+                m.Map(
+                    It.Is<SampleDetailsViewModel>(s => s.Equals(vm)),
                     It.Is<Sample>(s => s.Id == id)),
                 times ?? Times.Once()
             );
@@ -74,7 +72,7 @@
         /// Verifies that .Map<SampleDetailsViewModel> was called once
         /// with a Sample whose properties match the ViewModel.
         /// </summary>
-        internal static void VerifyMappedBackToViewModel(this Mock<IMapper> mapperMock, SampleDetailsViewModel vm, Times? times = null)
+        internal static void VerifyMappedBackToViewModel(this Mock<IDbUtilsMapper> mapperMock, SampleDetailsViewModel vm, Times? times = null)
         {
             mapperMock.Verify(
                 m => m.Map<SampleDetailsViewModel>(
@@ -91,20 +89,18 @@
         /// <summary>
         /// Verifies that .ProjectTo<SampleDetailsViewModel> was called once.
         /// </summary>
-        internal static void VerifyProjectedToViewModel(this Mock<IMapper> mapperMock, IEnumerable<SampleDetailsViewModel> data, Times? times = null)
+        internal static void VerifyProjectedToViewModel(this Mock<IDbUtilsMapper> mapperMock, IEnumerable<SampleDetailsViewModel> data, Times? times = null)
         {
             mapperMock.Verify(
                 m => m.ProjectTo<SampleDetailsViewModel>(
-                    It.Is<IQueryable<Sample>>(source =>
+                    It.Is<IQueryable>(source =>
                         data.Any(e =>
-                            source.Any(x => x.Id == e.Id &&
+                            source.Cast<Sample>().Any(x => x.Id == e.Id &&
                                 x.Name == e.Name &&
                                 x.Description == e.Description
                             )
                         )
-                    ),
-                    It.IsAny<object?>(),
-                    It.IsAny<Expression<Func<SampleDetailsViewModel, object>>[]>()
+                    )
                 ),
                 times ?? Times.Once()
             );
