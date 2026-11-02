@@ -43,10 +43,10 @@ namespace Rene.Utils.Db
         /// AsNoTracking
         /// </summary>
         bool AsNoTracking { get; }
-        ///// <summary>
-        ///// AsSplitQuery
-        ///// </summary>
-        //bool AsSplitQuery { get; }
+        /// <summary>
+        /// Uses split queries when supported by the EF Core provider.
+        /// </summary>
+        bool AsSplitQuery { get; }
 
 
         int Take { get; }

@@ -28,6 +28,7 @@
   <ItemGroup>
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Rene.Utils.Core" />
   </ItemGroup>
 

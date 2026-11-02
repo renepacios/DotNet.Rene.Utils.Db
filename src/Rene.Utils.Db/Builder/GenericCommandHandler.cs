@@ -43,7 +43,7 @@
 
             var entityEntry = await _db.AddAsync(model, cancellationToken);
 
-            await SaveChanges(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
 
             //   await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -61,7 +61,7 @@
 
             //  await _dbContext.SaveChangesAsync(cancellationToken);
 
-            await SaveChanges(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
 
             return true;
         }
@@ -156,7 +156,7 @@
 
             var entityEntry = _db.Update(model);
 
-            await SaveChanges(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
 
             //await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -178,7 +178,7 @@
             return entities.Select(e => _mapper.Map<TViewModel>(e)).ToList();
         }
 
-        private async Task<int> SaveChanges(CancellationToken cancellationToken)
+        private async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             if (_uow == null ||
                 (_uow.GetType().IsGenericType &&

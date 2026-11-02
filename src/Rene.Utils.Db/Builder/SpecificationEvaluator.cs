@@ -106,13 +106,10 @@ namespace Rene.Utils.Db.Builder
             }
 
 
-            ////TODO: Hacer con .net 10 ++
-            //if (specification.AsSplitQuery)
-            //{
-                
-            //        query = query.AsSplitQuery();
-    
-            //}
+            if (specification.AsSplitQuery)
+            {
+                query = query.AsSplitQuery();
+            }
 
             return query;
         }
