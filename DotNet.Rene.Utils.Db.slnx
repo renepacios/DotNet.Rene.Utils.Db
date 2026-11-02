@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/.repo/">
+    <File Path=".github/workflows/ci.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/Rene.Utils.Db.Sample.AutoMapper/Rene.Utils.Db.Sample.AutoMapper.csproj" />
+    <Project Path="samples/Rene.Utils.Db.Sample.ManualMapper/Rene.Utils.Db.Sample.ManualMapper.csproj" />
+    <Project Path="samples/Rene.Utils.Db.Sample.Mapster/Rene.Utils.Db.Sample.Mapster.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/" />
+  <Folder Name="/src/">
+    <Project Path="src/Rene.Utils.Db.Abstractions/Rene.Utils.Db.Abstractions.csproj" />
+    <Project Path="src/Rene.Utils.Db.AutoMapper/Rene.Utils.Db.AutoMapper.csproj" />
+    <Project Path="src/Rene.Utils.Db.Mapster/Rene.Utils.Db.Mapster.csproj" />
+    <Project Path="src/Rene.Utils.Db/Rene.Utils.Db.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Rene.Utils.Db.IntegrationTest/Rene.Utils.Db.IntegrationTest.csproj" />
+    <Project Path="tests/Rene.Utils.Db.Tests.Common/Rene.Utils.Db.Tests.Common.csproj" />
+    <Project Path="tests/Rene.Utils.Db.UnitTest/Rene.Utils.Db.UnitTest.csproj" />
+  </Folder>
+</Solution>

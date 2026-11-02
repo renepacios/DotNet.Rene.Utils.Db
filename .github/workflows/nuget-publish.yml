@@ -49,7 +49,7 @@ jobs:
         
         - name: Set env. aux vars
           run: |
-            echo "SOLUTION_NAME=DotNet.${PROJECT_NAME}.sln">> $GITHUB_ENV
+            echo "SOLUTION_NAME=DotNet.${PROJECT_NAME}.slnx">> $GITHUB_ENV
             echo "TEST_PROJECT_PATH=tests/${PROJECT_NAME}.UnitTest/${PROJECT_NAME}.UnitTest.csproj" >> $GITHUB_ENV
             echo "PROJECT_PATH=src/${PROJECT_NAME}/${PROJECT_NAME}.csproj" >> $GITHUB_ENV
             echo "ABS_PROJECT_PATH=src/${PROJECT_NAME}.Abstractions/${PROJECT_NAME}.Abstractions.csproj" >> $GITHUB_ENV
