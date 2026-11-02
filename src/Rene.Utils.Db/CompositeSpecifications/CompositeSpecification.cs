@@ -6,6 +6,24 @@ namespace Rene.Utils.Db.CompositeSpecifications
     {
         internal CompositeSpecification() { }
 
+        internal CompositeSpecification(IDbUtilsSpecification<T> specification)
+        {
+            ArgumentNullException.ThrowIfNull(specification);
+
+            Criteria = specification.Criteria;
+            Criterias = specification.Criterias?.ToList();
+            Includes = specification.Includes?.ToList();
+            IncludeStrings = specification.IncludeStrings?.ToList();
+            OrderBy = specification.OrderBy?.ToList();
+            GroupBy = specification.GroupBy;
+            Take = specification.Take;
+            Skip = specification.Skip;
+            IsPagingEnabled = specification.IsPagingEnabled;
+            IgnoreQueryFilters = specification.IgnoreQueryFilters;
+            AsNoTracking = specification.AsNoTracking;
+            AsSplitQuery = specification.AsSplitQuery;
+        }
+
         public Expression<Func<T, bool>> Criteria { get; internal set; }
         public ICollection<Expression<Func<T, bool>>> Criterias { get; internal set; }
         public List<Expression<Func<T, object>>> Includes { get; internal set; }
@@ -22,6 +40,6 @@ namespace Rene.Utils.Db.CompositeSpecifications
 
         public bool AsNoTracking { get; internal set; } = false;
 
-        // public bool AsSplitQuery => throw new NotImplementedException();
+        public bool AsSplitQuery { get; internal set; } = false;
     }
 }

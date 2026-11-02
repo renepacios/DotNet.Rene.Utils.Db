@@ -80,7 +80,7 @@ namespace Rene.Utils.Db.IntegrationTest
         private string GetSolutionDirectoryInfo(string? current = null)
         {
             var directory = new DirectoryInfo(current ?? Directory.GetCurrentDirectory());
-            if (directory.Exists && !directory.GetFiles("*.sln").Any()) return GetSolutionDirectoryInfo(directory.Parent?.FullName ?? null);
+            if (directory.Exists && !directory.GetFiles("*.slnx").Any()) return GetSolutionDirectoryInfo(directory.Parent?.FullName ?? null);
 
             return directory.FullName;
         }
