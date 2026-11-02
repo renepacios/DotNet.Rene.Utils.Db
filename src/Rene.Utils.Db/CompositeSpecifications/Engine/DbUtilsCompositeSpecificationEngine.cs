@@ -25,6 +25,15 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
 
         public abstract IDbUtilsCompositeSpecification<T> Build(); //Todo: implementar helpers con extensores y sobrecarga de operadores lógicos
 
+        protected CompositeSpecification<T> CreateSpecification(Expression<Func<T, bool>> criteria)
+            => new()
+            {
+                Criteria = criteria,
+                IgnoreQueryFilters = Left.IgnoreQueryFilters || (Right?.IgnoreQueryFilters ?? false),
+                AsNoTracking = Left.AsNoTracking || (Right?.AsNoTracking ?? false),
+                AsSplitQuery = Left.AsSplitQuery || (Right?.AsSplitQuery ?? false)
+            };
+
         protected internal DbUtilsCompositeSpecificationEngine(IDbUtilsSpecification<T> left, IDbUtilsSpecification<T> right)
         {
             _ = left ?? throw new ArgumentNullException(nameof(left));
@@ -125,10 +134,7 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
                 Expression.AndAlso(left, right), parameter);
 
 
-            return new CompositeSpecification<T>
-            {
-                Criteria = newExpresion
-            };
+            return CreateSpecification(newExpresion);
         }
     }
 
@@ -151,10 +157,7 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
             var newExpresion = Expression.Lambda<Func<T, bool>>(
                 Expression.OrElse(left, right), parameter);
 
-            return new CompositeSpecification<T>
-            {
-                Criteria = newExpresion
-            };
+            return CreateSpecification(newExpresion);
         }
 
     }
@@ -177,10 +180,7 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
                 Expression.Not(left), parameter);
 
 
-            return new CompositeSpecification<T>
-            {
-                Criteria = newExpresion
-            };
+            return CreateSpecification(newExpresion);
 
         }
 
@@ -205,10 +205,7 @@ namespace Rene.Utils.Db.CompositeSpecifications.Engine
             var newExpresion = Expression.Lambda<Func<T, bool>>(
                 Expression.AndAlso(left, right), parameter);
 
-            var composite = new CompositeSpecification<T>
-            {
-                Criteria = newExpresion
-            };
+            var composite = CreateSpecification(newExpresion);
 
             if (Left is IDbUtilsCompositeSpecification<T> leftComposite && leftComposite.OrderBy.AnyNotNull())
             {

@@ -107,6 +107,22 @@ public class ProductsController(ISender sender) : ControllerBase
 | `UpdateCommand<TViewModel>(viewModel, id)` | The updated `TViewModel` |
 | `DeleteCommand<TViewModel>(id)` | `bool` |
 
+### Specification query options
+
+Use the extensions in `Rene.Utils.Db.CompositeSpecifications` to configure EF Core query behavior:
+
+```csharp
+var specification = new DbUtilsAllSpecification<Product>()
+    .AsSplitQuery()
+    .IgnoreQueryFilters()
+    .AsNoTracking();
+```
+
+Each extension returns a copy without modifying the original specification. Options enabled on either
+operand are preserved by `And` and `Or`, and remain enabled after `ToInvert` and `OrderBy`.
+`AsSplitQuery` requests split queries from relational EF Core providers; it has no effect on
+providers that do not support relational query splitting, such as InMemory.
+
 ### Samples
 - [Rene.Utils.Db.Sample.AutoMapper](samples/Rene.Utils.Db.Sample.AutoMapper): mapping with AutoMapper.
 - [Rene.Utils.Db.Sample.Mapster](samples/Rene.Utils.Db.Sample.Mapster): mapping with Mapster.
