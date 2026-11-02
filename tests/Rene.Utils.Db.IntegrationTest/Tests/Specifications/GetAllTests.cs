@@ -2,7 +2,7 @@
 
 namespace Rene.Utils.Db.IntegrationTest
 {
-    using Commands;
+    using ExtensionHelpers;
     using FluentAssertions;
     using Tests.Common.Dto;
 
@@ -14,10 +14,9 @@ namespace Rene.Utils.Db.IntegrationTest
         {
             // Arrange
             var mediator = fixture.Mediator ?? throw new InvalidOperationException("Mediator is null");
-            var getCommand = new GetAllCommand<ProductDto>();
 
             // Act
-            var response = await mediator.Send(getCommand, CancellationToken.None);
+            var response = await mediator.GetAll<ProductDto>(CancellationToken.None);
 
             // Assert
             response.Should().NotBeEmpty();

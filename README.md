@@ -66,36 +66,50 @@ builder.AddDbUtils<ShopDbContext>(options => options.UseMapster(), typeof(Progra
 `AddDbUtils` is available for both `IHostApplicationBuilder` and `IServiceCollection`. By default the `DbContext` is used directly as unit of work. To use your own, call `options.UseOwnUnitOfWork<TUnitOfWork>()` or `AddDbUtils<TDbContext, TUnitOfWork>(...)`.
 
 ### 5. Send the commands
+
+Import `Rene.Utils.Db.ExtensionHelpers` to use the convenience extensions on `IMediator`.
+They send the existing generic commands through MediatR, preserving handlers and pipeline behaviors.
+
 ```csharp
+using Rene.Utils.Db.ExtensionHelpers;
+
 [ApiController]
 [Route("[controller]")]
-public class ProductsController(ISender sender) : ControllerBase
+public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await sender.Send(new GetAllCommand<ProductViewModel>()));
+        => Ok(await mediator.GetAll<ProductViewModel>());
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
-        => Ok(await sender.Send(new GetCommand<ProductViewModel>(id)));
+        => Ok(await mediator.Get<ProductViewModel>(id));
 
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginated(int page = 0, int size = 10)
-        => Ok(await sender.Send(new GetPaginatedCommand<ProductViewModel, Product>(new DbUtilsAllSpecification<Product>(), size, page)));
+        => Ok(await mediator.GetPaginated<ProductViewModel, Product>(size, page));
 
     [HttpPost]
     public async Task<IActionResult> Post(ProductViewModel viewModel)
-        => Ok(await sender.Send(new AddCommand<ProductViewModel>(viewModel)));
+        => Ok(await mediator.Add(viewModel));
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, ProductViewModel viewModel)
-        => Ok(await sender.Send(new UpdateCommand<ProductViewModel>(viewModel, id)));
+        => Ok(await mediator.Update(viewModel, id));
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
-        => Ok(await sender.Send(new DeleteCommand<ProductViewModel>(id)));
+        => Ok(await mediator.Delete<ProductViewModel>(id));
 }
 ```
+
+All extensions accept an optional `CancellationToken` as the last argument. Use
+`mediator.GetBySpec<ProductViewModel, Product>(specification, cancellationToken)` for filtered queries.
+`GetPaginated<TViewModel, TEntity>` supports size and a zero-based page number, optionally preceded by
+a specification, or a specification followed by `PaginationOptions`.
+
+The generic commands remain public and unchanged. Existing code such as
+`mediator.Send(new GetCommand<ProductViewModel>(id), cancellationToken)` continues to work.
 
 | Command | Result |
 | ------- | ------ |
@@ -124,6 +138,10 @@ operand are preserved by `And` and `Or`, and remain enabled after `ToInvert` and
 providers that do not support relational query splitting, such as InMemory.
 
 ### Samples
+Each sample exposes the same operations through two separate controllers:
+`WeatherForecastController` at `/WeatherForecast` uses `Send(new ...Command(...))`,
+while `WeatherForecastExtensionsController` at `/WeatherForecastExtensions` uses the `IMediator` extensions.
+
 - [Rene.Utils.Db.Sample.AutoMapper](samples/Rene.Utils.Db.Sample.AutoMapper): mapping with AutoMapper.
 - [Rene.Utils.Db.Sample.Mapster](samples/Rene.Utils.Db.Sample.Mapster): mapping with Mapster.
 - [Rene.Utils.Db.Sample.ManualMapper](samples/Rene.Utils.Db.Sample.ManualMapper): manual mappings without any mapping library.
