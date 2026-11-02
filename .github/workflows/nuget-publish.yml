@@ -9,12 +9,7 @@ on:
     paths-ignore:
       - '**/README.md'
       - '**/LICENSE'    
-  pull_request:
-    branches: 
-      - main    
-    paths-ignore:
-      - '**/README.md'
-      - '**/LICENSE'
+
   workflow_dispatch: #to test
 
   
