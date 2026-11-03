@@ -1,0 +1,16 @@
+- name: Getting started
+  href: getting-started.md
+- name: Configuration and registration
+  href: configuration.md
+- name: Commands
+  href: commands.md
+- name: Specifications
+  href: specifications.md
+- name: Mapping
+  href: mapping.md
+- name: Pagination
+  href: pagination.md
+- name: Samples and tests
+  href: samples-and-tests.md
+- name: Maintaining and publishing these docs
+  href: documentation.md
