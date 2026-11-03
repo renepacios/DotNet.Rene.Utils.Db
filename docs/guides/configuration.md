@@ -81,6 +81,10 @@ all three `IDbUtilsUnitOfWork` save methods. The handlers invoke its
 `SaveChangesAsync(CancellationToken)` after each add, update or delete.
 The library does not create a transaction spanning multiple commands automatically.
 
+Generic Add, Update and Delete handlers publish [CRUD events](events.md) after their
+save operation completes. Subscribers run before the command returns. This is not
+a transaction-commit notification: an external transaction may still be active.
+
 ## Troubleshooting
 
 | Symptom | Check |

@@ -19,6 +19,7 @@ namespace Rene.Utils.Db.UnitTest.DependencyInjection
         {
             var services = new ServiceCollection();
             services.AddDbContext<RegistrationDbContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddScoped<IPublisher>(_ => new Mock<IPublisher>(MockBehavior.Strict).Object);
             return services;
         }
 
@@ -28,6 +29,7 @@ namespace Rene.Utils.Db.UnitTest.DependencyInjection
             var builder = Host.CreateApplicationBuilder();
             builder.Services.AddDbContext<RegistrationDbContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
             builder.Services.AddScoped(_ => Mock.Of<IDbUtilsMapper>());
+            builder.Services.AddScoped<IPublisher>(_ => new Mock<IPublisher>(MockBehavior.Strict).Object);
 
             builder.AddDbUtils<RegistrationDbContext>(typeof(DbUtilsRegistrationTests).Assembly);
 

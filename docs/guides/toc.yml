@@ -4,6 +4,8 @@
   href: configuration.md
 - name: Commands
   href: commands.md
+- name: CRUD events
+  href: events.md
 - name: Command logging
   href: command-logging.md
 - name: Specifications

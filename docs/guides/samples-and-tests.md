@@ -23,6 +23,10 @@ pagination, add, update and delete through generic commands.
 Each sample initializes its own SQLite database. Run these projects as development
 examples, not as production deployment templates.
 
+Each sample registers a `WeatherForecastEventHandler` through MediatR assembly
+scanning to demonstrate [CRUD events](events.md) after Add, Update and Delete.
+Both explicit-command and mediator-extension controllers publish the same events.
+
 All samples also show [command logging](command-logging.md): AutoMapper configures
 Before and Completed lambdas, Mapster configures only Completed, and ManualMapper
 resolves an application-owned scoped event writer. Both controller styles use

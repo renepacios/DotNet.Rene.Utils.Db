@@ -24,7 +24,8 @@ namespace Rene.Utils.Db.UnitTest
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
                 scenario.MapperMock.Object,
                 scenario.DbContextMock.Object,
-                scenario.UowMock.Object
+                scenario.UowMock.Object,
+                Mock.Of<IPublisher>()
             );
 
             // 3) Input command
