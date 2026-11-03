@@ -1,6 +1,7 @@
 namespace Rene.Utils.Db.Sample.ManualMapper
 {
     using Microsoft.EntityFrameworkCore;
+    using Rene.Utils.Db.Authorization;
     using Model;
     using ViewModel;
 
@@ -18,6 +19,12 @@ namespace Rene.Utils.Db.Sample.ManualMapper
             builder.Services.AddDbContext<SampleDbContext>(options => options.UseSqlite("Data Source=Database.db"));
 
             builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<Program>());
+
+            if (builder.Configuration.GetValue<bool>("Authorization:Enabled"))
+            {
+                builder.Services.AddHttpContextAccessor();
+                builder.Services.AddDbUtilsAuthorization(typeof(Program).Assembly);
+            }
 
             builder.AddDbUtils<SampleDbContext>(options => options.UseMapper(m => m
                 // Expressions: used for in-memory mapping and translated to SQL in projections (GetAll, GetPaginated...)
@@ -49,6 +56,21 @@ namespace Rene.Utils.Db.Sample.ManualMapper
                 })), typeof(Program).Assembly);
 
             var app = builder.Build();
+
+            app.Use(async (context, next) =>
+            {
+                try
+                {
+                    await next(context);
+                }
+                catch (CommandAuthorizationException) when (!context.Response.HasStarted)
+                {
+                    var statusCode = context.User.Identity?.IsAuthenticated == true
+                        ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized;
+                    await Results.Problem(statusCode: statusCode, title: "Command authorization denied")
+                        .ExecuteAsync(context);
+                }
+            });
 
             await app.InitializeDbAsync();
 

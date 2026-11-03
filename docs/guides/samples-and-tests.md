@@ -23,6 +23,11 @@ pagination, add, update and delete through generic commands.
 Each sample initializes its own SQLite database. Run these projects as development
 examples, not as production deployment templates.
 
+The ManualMapper sample also demonstrates optional [command authorization](authorization.md):
+one requirement handler shared by generic write commands and a concrete count query.
+Enable it with `--Authorization:Enabled=true`; it is disabled by default.
+The host must supply a real authenticated principal to grant protected operations.
+
 The source is available under
 [samples](https://github.com/renepd/DotNet.Rene.Utils.Db/tree/develop/samples).
 
@@ -35,7 +40,8 @@ dotnet test tests/Rene.Utils.Db.UnitTest/Rene.Utils.Db.UnitTest.csproj
 ```
 
 The unit test project uses xUnit, FluentAssertions, Moq and EF Core InMemory.
-It covers command handlers, mappings, registration and specification evaluation.
+It covers command handlers, mappings, registration, specification evaluation and
+the optional authorization pipeline.
 InMemory is useful for behavioral tests but does not validate SQL translation.
 
 ## SQL Server integration tests
