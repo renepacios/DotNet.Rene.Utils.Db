@@ -401,3 +401,10 @@ FodyWeavers.xsd
 /samples/*/Database.db
 /samples/*/Database.db-shm
 /samples/*/Database.db-wal
+
+# Generated DocFX documentation
+/docs/_site/
+/docs/obj/
+/docs/.cache/
+/docs/api/*.yml
+/docs/api/.manifest

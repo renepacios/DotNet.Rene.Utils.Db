@@ -11,6 +11,16 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - Specification-based queries
 - Projections in database queries based on the properties of the target ViewModel
 
+## Documentation
+
+Start with the [documentation home](docs/index.md) or the
+[getting started guide](docs/guides/getting-started.md).
+The guides cover configuration, commands, specifications, mapping, pagination,
+samples and tests. The DocFX site also generates a public API reference.
+
+See [building and publishing documentation](docs/guides/documentation.md) for local
+preview commands and the one-time GitHub Pages setup.
+
 ## Getting Started
 
 ### Prerequisites

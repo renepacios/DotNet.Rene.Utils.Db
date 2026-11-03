@@ -1,0 +1,41 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../src",
+          "files": [
+            "Rene.Utils.Db.Abstractions/bin/Release/netstandard2.1/Rene.Utils.Db.Abstractions.dll",
+            "Rene.Utils.Db/bin/Release/net10.0/Rene.Utils.Db.dll",
+            "Rene.Utils.Db.AutoMapper/bin/Release/net10.0/Rene.Utils.Db.AutoMapper.dll",
+            "Rene.Utils.Db.Mapster/bin/Release/net10.0/Rene.Utils.Db.Mapster.dll"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "index.md",
+          "toc.yml",
+          "guides/**.md",
+          "guides/toc.yml",
+          "api/**.yml",
+          "api/index.md"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "template": ["default", "modern"],
+    "globalMetadata": {
+      "_appTitle": "Rene.Utils.Db",
+      "_appName": "Rene.Utils.Db",
+      "_appFooter": "Rene.Utils.Db documentation",
+      "_enableSearch": true
+    }
+  }
+}
