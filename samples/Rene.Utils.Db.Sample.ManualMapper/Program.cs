@@ -1,9 +1,9 @@
 namespace Rene.Utils.Db.Sample.ManualMapper
 {
-    using Microsoft.EntityFrameworkCore;
     using Logging;
-    using Rene.Utils.Db.Authorization;
+    using Microsoft.EntityFrameworkCore;
     using Model;
+    using Rene.Utils.Db.Authorization;
     using ViewModel;
 
     public class Program
@@ -22,6 +22,12 @@ namespace Rene.Utils.Db.Sample.ManualMapper
 
             builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<Program>());
 
+            if (builder.Configuration.GetValue<bool>("Authorization:Enabled"))
+            {
+                builder.Services.AddHttpContextAccessor();
+                builder.Services.AddDbUtilsAuthorization(typeof(Program).Assembly);
+            }
+
             builder.AddDbUtils<SampleDbContext>(options => options
                 .UseCommandLogging(logging =>
                 {
@@ -30,41 +36,37 @@ namespace Rene.Utils.Db.Sample.ManualMapper
                     logging.Completed = (services, context, cancellationToken) =>
                         services.GetRequiredService<ISampleCommandEventWriter>().Completed(context, cancellationToken);
                 })
-                .UseMapper(m => m
-            if (builder.Configuration.GetValue<bool>("Authorization:Enabled"))
-            {
-                builder.Services.AddHttpContextAccessor();
-                builder.Services.AddDbUtilsAuthorization(typeof(Program).Assembly);
-            }
+                .UseMapper(m => m // Expressions: used for in-memory mapping and translated to SQL in projections (GetAll, GetPaginated...)
+                    .Map<WeatherForecast, WeatherForecastViewModel>(e => new WeatherForecastViewModel
+                    {
+                        Id = e.Id,
+                        Date = e.Date
+                    })
+                    .Map<WeatherForecast, WeatherForecastViewModelDetails>(e => new WeatherForecastViewModelDetails
+                    {
+                        Id = e.Id,
+                        Date = e.Date,
+                        TemperatureC = e.TemperatureC,
+                        Summary = e.Summary
+                    })
+                    // Function with access to the dependency injection container (in-memory only, used by AddCommand)
+                    .Map<WeatherForecastViewModelDetails, WeatherForecast>((sp, vm) => new WeatherForecast
+                    {
+                        Date = vm.Date == default ? sp.GetRequiredService<TimeProvider>().GetLocalNow().DateTime : vm.Date,
+                        TemperatureC = vm.TemperatureC,
+                        Summary = vm.Summary
+                    })
+                    // Update of an existing entity (used by UpdateCommand)
+                    .MapInto<WeatherForecastViewModelDetails, WeatherForecast>((vm, entity) =>
+                    {
+                        entity.Date = vm.Date;
+                        entity.TemperatureC = vm.TemperatureC;
+                        entity.Summary = vm.Summary;
+                    })
+                )
+                , typeof(Program).Assembly);
 
-            builder.AddDbUtils<SampleDbContext>(options => options.UseMapper(m => m
-                // Expressions: used for in-memory mapping and translated to SQL in projections (GetAll, GetPaginated...)
-                .Map<WeatherForecast, WeatherForecastViewModel>(e => new WeatherForecastViewModel
-                {
-                    Id = e.Id,
-                    Date = e.Date
-                })
-                .Map<WeatherForecast, WeatherForecastViewModelDetails>(e => new WeatherForecastViewModelDetails
-                {
-                    Id = e.Id,
-                    Date = e.Date,
-                    TemperatureC = e.TemperatureC,
-                    Summary = e.Summary
-                })
-                // Function with access to the dependency injection container (in-memory only, used by AddCommand)
-                .Map<WeatherForecastViewModelDetails, WeatherForecast>((sp, vm) => new WeatherForecast
-                {
-                    Date = vm.Date == default ? sp.GetRequiredService<TimeProvider>().GetLocalNow().DateTime : vm.Date,
-                    TemperatureC = vm.TemperatureC,
-                    Summary = vm.Summary
-                })
-                // Update of an existing entity (used by UpdateCommand)
-                .MapInto<WeatherForecastViewModelDetails, WeatherForecast>((vm, entity) =>
-                {
-                    entity.Date = vm.Date;
-                    entity.TemperatureC = vm.TemperatureC;
-                    entity.Summary = vm.Summary;
-                })), typeof(Program).Assembly);
+
 
             var app = builder.Build();
 
