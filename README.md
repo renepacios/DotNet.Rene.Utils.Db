@@ -16,6 +16,10 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 
 ## Documentation
 
+The most complete documentation is available on the
+[documentation site](https://renepacios.github.io/DotNet.Rene.Utils.Db/),
+including detailed guides, examples and the public API reference.
+
 Start with the [documentation home](docs/index.md) or the
 [getting started guide](docs/guides/getting-started.md).
 The guides cover configuration, commands, specifications, mapping, pagination,
