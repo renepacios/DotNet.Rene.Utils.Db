@@ -150,7 +150,7 @@
                 .Returns((object s) => SampleDetailsViewModel.Create((Sample)s));
 
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, SampleDbContext, IDbUtilsUnitOfWork>(
-                mapper.Object, context, null);
+                mapper.Object, context, null, Mock.Of<IPublisher>());
 
             var result = await handler.Handle(new GetAllCommand<SampleDetailsViewModel>(), CancellationToken.None);
 
@@ -173,7 +173,7 @@
             using var scope = provider.CreateScope();
 
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, SampleDbContext, IDbUtilsUnitOfWork>(
-                scope.ServiceProvider.GetRequiredService<IDbUtilsMapper>(), context, null);
+                scope.ServiceProvider.GetRequiredService<IDbUtilsMapper>(), context, null, Mock.Of<IPublisher>());
 
             var result = await handler.Handle(new GetAllCommand<SampleDetailsViewModel>(), CancellationToken.None);
 

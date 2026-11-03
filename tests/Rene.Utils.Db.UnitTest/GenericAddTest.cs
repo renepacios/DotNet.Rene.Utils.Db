@@ -21,7 +21,8 @@ namespace Rene.Utils.Db.UnitTest
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
                 scenario.MapperMock.Object,
                 scenario.DbContextMock.Object,
-                scenario.UowMock.Object
+                scenario.UowMock.Object,
+                Mock.Of<IPublisher>()
             );
 
             // 3) Input command
@@ -57,7 +58,8 @@ namespace Rene.Utils.Db.UnitTest
             var handler = new GenericCommandHandler<SampleDetailsViewModel, Sample, DbContext, IDbUtilsUnitOfWork>(
                 scenario.MapperMock.Object,
                 scenario.DbContextMock.Object,
-                null // no UoW
+                null, // no UoW
+                Mock.Of<IPublisher>()
             );
 
             var vm = SampleDetailsViewModel.DefaultSampleDetails;

@@ -5,11 +5,41 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 
 ## Features
 - Generic command handlers for CRUD operations
+- Typed MediatR notifications after saving Add, Update and Delete
 - Unit of Work pattern implementation
 - Integration with MediatR
 - Pluggable mapping: no dependency on any mapping library (AutoMapper, Mapster or manual mappings)
 - Specification-based queries
 - Projections in database queries based on the properties of the target ViewModel
+- Optional command logging with application-owned Before/Completed callbacks and scoped service resolution
+- Optional command authorization discovered from operation-specific interfaces and reusable requirement handlers
+
+## Documentation
+
+The most complete documentation is available on the
+[documentation site](https://renepacios.github.io/DotNet.Rene.Utils.Db/),
+including detailed guides, examples and the public API reference.
+
+Start with the [documentation home](docs/index.md) or the
+[getting started guide](docs/guides/getting-started.md).
+The guides cover configuration, commands, specifications, mapping, pagination,
+samples and tests. The DocFX site also generates a public API reference.
+
+See [building and publishing documentation](docs/guides/documentation.md) for local
+preview commands and the one-time GitHub Pages setup.
+
+Generic writes publish `EntityAdded<TModel, TViewModel>`,
+`EntityUpdated<TModel, TViewModel>` and `EntityDeleted<TModel, TViewModel>` by default.
+Subscribe with MediatR `INotificationHandler<TNotification>`. Events include the entity,
+the command's input DTO and mapped response for Add/Update, and the request ID for
+Update/Delete. See [CRUD events](docs/guides/events.md) for examples and the important
+post-save failure and transaction boundaries.
+
+Configure `options.UseCommandLogging(logging => { ... })` alongside your mapper to
+receive command start/completion timestamps, elapsed time, outcome and correlation IDs.
+Callbacks can resolve your own event writer from the current scope without an additional
+logging framework. See [command logging](docs/guides/command-logging.md) for configuration,
+error handling and executable examples.
 
 ## Getting Started
 
@@ -18,6 +48,16 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - Entity Framework Core
 - MediatR
 - Optional: AutoMapper (`Rene.Utils.Db.AutoMapper`) or Mapster (`Rene.Utils.Db.Mapster`)
+
+### Optional command authorization
+
+Call `services.AddDbUtilsAuthorization(typeof(Program).Assembly)` to discover definitions such as
+`IAuthorizationAdd<ProductDto>` and reusable `IRequirementHandler<TRequirement>` implementations.
+For custom commands, implement `ICommandAuthorization<TCommand>`.
+Commands without definitions remain allowed; each configured definition must supply at least
+one requirement, and all requirements must succeed before the command handler runs.
+Both explicit `Send` and the `IMediator` convenience extensions use the same authorization pipeline.
+See the [authorization guide](docs/guides/authorization.md) for a complete example and security boundaries.
 
 ### 1. Install the packages
 ```bash
