@@ -5,7 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>2</VersionPrefix>
-    <Version>$(VersionPrefix).4.0.0</Version>
+    <Version>$(VersionPrefix).5.0.0</Version>
     <FileVersion>$(Version)</FileVersion>
     <Authors>René Pacios</Authors>
     <Company>WebRene.es</Company>

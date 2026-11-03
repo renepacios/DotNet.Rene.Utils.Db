@@ -2,6 +2,7 @@
 {
     using Commands;
     using DbInternal;
+    using Events;
     using Microsoft.EntityFrameworkCore;
 
     internal class GenericCommandHandler<TViewModel, TModel, TDbContext, Tuow> :
@@ -24,13 +25,15 @@
         private readonly IDbUtilsMapper _mapper;
 
         private readonly Tuow _uow;
+        private readonly IPublisher _publisher;
         //   private readonly ISimpleCrudServiceAsync<TModel> _db;
 
-        public GenericCommandHandler(IDbUtilsMapper mapper, TDbContext dbContext, Tuow uow)
+        public GenericCommandHandler(IDbUtilsMapper mapper, TDbContext dbContext, Tuow uow, IPublisher publisher)
         {
             _mapper = mapper;
             _dbContext = dbContext;
             _uow = uow;
+            _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
             _db = _dbContext.Set<TModel>();
 
             //ISimpleCrudServiceAsync<TModel> service    _db = service;
@@ -47,7 +50,10 @@
 
             //   await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<TViewModel>(entityEntry?.Entity);
+            var response = _mapper.Map<TViewModel>(entityEntry.Entity);
+            await _publisher.Publish(new EntityAdded<TModel, TViewModel>(entityEntry.Entity, request.ViewModel, response),
+                cancellationToken).ConfigureAwait(false);
+            return response;
             //  return request.ViewModel;
         }
 
@@ -62,6 +68,9 @@
             //  await _dbContext.SaveChangesAsync(cancellationToken);
 
             await SaveChangesAsync(cancellationToken);
+
+            await _publisher.Publish(new EntityDeleted<TModel, TViewModel>(entityEntry.Entity, request.Id),
+                cancellationToken).ConfigureAwait(false);
 
             return true;
         }
@@ -160,7 +169,10 @@
 
             //await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<TViewModel>(entityEntry?.Entity);
+            var response = _mapper.Map<TViewModel>(entityEntry.Entity);
+            await _publisher.Publish(new EntityUpdated<TModel, TViewModel>(entityEntry.Entity, request.ViewModel, request.Id, response),
+                cancellationToken).ConfigureAwait(false);
+            return response;
         }
 
 

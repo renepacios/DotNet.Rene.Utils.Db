@@ -5,6 +5,7 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 
 ## Features
 - Generic command handlers for CRUD operations
+- Typed MediatR notifications after saving Add, Update and Delete
 - Unit of Work pattern implementation
 - Integration with MediatR
 - Pluggable mapping: no dependency on any mapping library (AutoMapper, Mapster or manual mappings)
@@ -22,6 +23,13 @@ samples and tests. The DocFX site also generates a public API reference.
 
 See [building and publishing documentation](docs/guides/documentation.md) for local
 preview commands and the one-time GitHub Pages setup.
+
+Generic writes publish `EntityAdded<TModel, TViewModel>`,
+`EntityUpdated<TModel, TViewModel>` and `EntityDeleted<TModel, TViewModel>` by default.
+Subscribe with MediatR `INotificationHandler<TNotification>`. Events include the entity,
+the command's input DTO and mapped response for Add/Update, and the request ID for
+Update/Delete. See [CRUD events](docs/guides/events.md) for examples and the important
+post-save failure and transaction boundaries.
 
 Configure `options.UseCommandLogging(logging => { ... })` alongside your mapper to
 receive command start/completion timestamps, elapsed time, outcome and correlation IDs.
