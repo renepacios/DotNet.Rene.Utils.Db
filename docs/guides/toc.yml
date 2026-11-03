@@ -4,6 +4,8 @@
   href: configuration.md
 - name: Commands
   href: commands.md
+- name: Command authorization
+  href: authorization.md
 - name: Specifications
   href: specifications.md
 - name: Mapping

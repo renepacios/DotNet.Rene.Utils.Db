@@ -10,6 +10,7 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - Pluggable mapping: no dependency on any mapping library (AutoMapper, Mapster or manual mappings)
 - Specification-based queries
 - Projections in database queries based on the properties of the target ViewModel
+- Optional command authorization discovered from operation-specific interfaces and reusable requirement handlers
 
 ## Documentation
 
@@ -28,6 +29,16 @@ preview commands and the one-time GitHub Pages setup.
 - Entity Framework Core
 - MediatR
 - Optional: AutoMapper (`Rene.Utils.Db.AutoMapper`) or Mapster (`Rene.Utils.Db.Mapster`)
+
+### Optional command authorization
+
+Call `services.AddDbUtilsAuthorization(typeof(Program).Assembly)` to discover definitions such as
+`IAuthorizationAdd<ProductDto>` and reusable `IRequirementHandler<TRequirement>` implementations.
+For custom commands, implement `ICommandAuthorization<TCommand>`.
+Commands without definitions remain allowed; each configured definition must supply at least
+one requirement, and all requirements must succeed before the command handler runs.
+Both explicit `Send` and the `IMediator` convenience extensions use the same authorization pipeline.
+See the [authorization guide](docs/guides/authorization.md) for a complete example and security boundaries.
 
 ### 1. Install the packages
 ```bash
