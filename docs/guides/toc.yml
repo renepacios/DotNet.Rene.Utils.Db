@@ -6,6 +6,8 @@
   href: commands.md
 - name: Command logging
   href: command-logging.md
+- name: Command authorization
+  href: authorization.md
 - name: Specifications
   href: specifications.md
 - name: Mapping
