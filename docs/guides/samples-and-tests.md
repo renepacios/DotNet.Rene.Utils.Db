@@ -23,6 +23,10 @@ pagination, add, update and delete through generic commands.
 Each sample initializes its own SQLite database. Run these projects as development
 examples, not as production deployment templates.
 
+All samples also show [command logging](command-logging.md): AutoMapper configures
+Before and Completed lambdas, Mapster configures only Completed, and ManualMapper
+resolves an application-owned scoped event writer. Both controller styles use
+the same pipeline.
 The ManualMapper sample also demonstrates optional [command authorization](authorization.md):
 one requirement handler shared by generic write commands and a concrete count query.
 Enable it with `--Authorization:Enabled=true`; it is disabled by default.
