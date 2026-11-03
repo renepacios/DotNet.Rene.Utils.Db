@@ -2,6 +2,7 @@
 
 using Rene.Utils.Db;
 using Rene.Utils.Db.Mapping;
+using Rene.Utils.Db.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,6 +14,23 @@ namespace Microsoft.Extensions.DependencyInjection
         internal Type UnitOfWorkType { get; set; }
 
         internal Type DbContextType { get; set; }
+
+        internal CommandLoggingOptions CommandLogging { get; private set; }
+
+        /// <summary>
+        /// Enables application-owned callbacks around MediatR request execution.
+        /// Each callback receives the service provider of the executing scope.
+        /// </summary>
+        public DbUtilsOptions UseCommandLogging(Action<CommandLoggingOptions> configure)
+        {
+            if (configure == null) throw new ArgumentNullException(nameof(configure));
+            var logging = new CommandLoggingOptions();
+            configure(logging);
+            if (logging.Before == null && logging.Completed == null)
+                throw new ArgumentException("Configure at least one command logging callback.", nameof(configure));
+            CommandLogging = new CommandLoggingOptions { Before = logging.Before, Completed = logging.Completed };
+            return this;
+        }
 
         internal Func<IServiceProvider, IDbUtilsMapper> MapperFactory { get; private set; }
 

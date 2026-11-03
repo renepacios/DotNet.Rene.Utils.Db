@@ -7,6 +7,7 @@ Register the entity/view-model pairs, choose a mapper, and send commands through
 
 - [Getting started](guides/getting-started.md): install the packages and configure a working application.
 - [Commands](guides/commands.md): create, read, update, delete and filtered queries.
+- [Command logging](guides/command-logging.md): application-owned callbacks, scoped services and execution metadata.
 - [Specifications](guides/specifications.md): filtering, ordering, includes and composition.
 - [Mapping](guides/mapping.md): manual mappings, AutoMapper, Mapster and custom integrations.
 - [Pagination](guides/pagination.md): zero-based pages and result metadata.

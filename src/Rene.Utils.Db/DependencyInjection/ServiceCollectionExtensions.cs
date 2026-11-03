@@ -112,6 +112,13 @@ namespace Microsoft.Extensions.DependencyInjection
             DbUtilsOptions options, Assembly[] assemblies)
             where TDbContext : DbContext
         {
+            if (options.CommandLogging != null)
+                services.AddDbUtilsCommandLogging(logging =>
+                {
+                    logging.Before = options.CommandLogging.Before;
+                    logging.Completed = options.CommandLogging.Completed;
+                });
+
             // Only when no unit of work has been configured (UseOwnUnitOfWork or TUnitOfWork), so it is never overwritten.
             if (options.UnitOfWorkType == null) services.RegisterFallBackUow<TDbContext>(options);
 

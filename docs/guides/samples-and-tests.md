@@ -23,6 +23,11 @@ pagination, add, update and delete through generic commands.
 Each sample initializes its own SQLite database. Run these projects as development
 examples, not as production deployment templates.
 
+All samples also show [command logging](command-logging.md): AutoMapper configures
+Before and Completed lambdas, Mapster configures only Completed, and ManualMapper
+resolves an application-owned scoped event writer. Both controller styles use
+the same pipeline.
+
 The source is available under
 [samples](https://github.com/renepd/DotNet.Rene.Utils.Db/tree/develop/samples).
 

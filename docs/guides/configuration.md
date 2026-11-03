@@ -19,6 +19,14 @@ your public view models explicitly; each view model must implement
 `IWithGenericHandler<TEntity>` and have a public parameterless constructor.
 The library registers closed, scoped handlers for the discovered pairs.
 
+## Command logging
+
+Configure `options.UseCommandLogging(logging => { ... })` alongside the mapper.
+The optional Before and Completed callbacks receive the current scoped service
+provider, timestamps and correlated execution metadata. No additional logging
+framework is needed. See [command logging](command-logging.md) for complete examples,
+cancellation and failure semantics.
+
 ## Mapper lifetime
 
 A configured mapper factory is invoked once per dependency-injection scope.

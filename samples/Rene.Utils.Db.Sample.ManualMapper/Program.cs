@@ -1,6 +1,7 @@
 namespace Rene.Utils.Db.Sample.ManualMapper
 {
     using Microsoft.EntityFrameworkCore;
+    using Logging;
     using Model;
     using ViewModel;
 
@@ -14,12 +15,21 @@ namespace Rene.Utils.Db.Sample.ManualMapper
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddScoped<ISampleCommandEventWriter, SampleCommandEventWriter>();
 
             builder.Services.AddDbContext<SampleDbContext>(options => options.UseSqlite("Data Source=Database.db"));
 
             builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<Program>());
 
-            builder.AddDbUtils<SampleDbContext>(options => options.UseMapper(m => m
+            builder.AddDbUtils<SampleDbContext>(options => options
+                .UseCommandLogging(logging =>
+                {
+                    logging.Before = (services, context, cancellationToken) =>
+                        services.GetRequiredService<ISampleCommandEventWriter>().Starting(context, cancellationToken);
+                    logging.Completed = (services, context, cancellationToken) =>
+                        services.GetRequiredService<ISampleCommandEventWriter>().Completed(context, cancellationToken);
+                })
+                .UseMapper(m => m
                 // Expressions: used for in-memory mapping and translated to SQL in projections (GetAll, GetPaginated...)
                 .Map<WeatherForecast, WeatherForecastViewModel>(e => new WeatherForecastViewModel
                 {

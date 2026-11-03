@@ -4,6 +4,8 @@
   href: configuration.md
 - name: Commands
   href: commands.md
+- name: Command logging
+  href: command-logging.md
 - name: Specifications
   href: specifications.md
 - name: Mapping

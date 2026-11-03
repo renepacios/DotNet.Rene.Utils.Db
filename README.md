@@ -10,6 +10,7 @@ Rene.Utils.Db is a utility library for handling database operations using Entity
 - Pluggable mapping: no dependency on any mapping library (AutoMapper, Mapster or manual mappings)
 - Specification-based queries
 - Projections in database queries based on the properties of the target ViewModel
+- Optional command logging with application-owned Before/Completed callbacks and scoped service resolution
 
 ## Documentation
 
@@ -20,6 +21,12 @@ samples and tests. The DocFX site also generates a public API reference.
 
 See [building and publishing documentation](docs/guides/documentation.md) for local
 preview commands and the one-time GitHub Pages setup.
+
+Configure `options.UseCommandLogging(logging => { ... })` alongside your mapper to
+receive command start/completion timestamps, elapsed time, outcome and correlation IDs.
+Callbacks can resolve your own event writer from the current scope without an additional
+logging framework. See [command logging](docs/guides/command-logging.md) for configuration,
+error handling and executable examples.
 
 ## Getting Started
 
