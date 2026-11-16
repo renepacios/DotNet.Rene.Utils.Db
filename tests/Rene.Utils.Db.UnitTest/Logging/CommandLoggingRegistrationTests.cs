@@ -24,7 +24,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
                 o.UseCommandLogging(logging => Configure(logging, mode, stages)), typeof(CommandLoggingRegistrationTests).Assembly);
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
-            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(new Response("configured"));
             }, default);
@@ -43,7 +43,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             var response = new Response("standalone");
-            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(response);
             }, default);
@@ -131,7 +131,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
                 o.Completed = (_, _, _) => { stages.Add("MutatedCompleted"); return Task.CompletedTask; });
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
-            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(new Response("snapshot"));
             }, default);
@@ -158,7 +158,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             scope.ServiceProvider.GetServices<IPipelineBehavior<Request, Response>>().Should().ContainSingle();
-            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(new Response("last"));
             }, default);
@@ -183,7 +183,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
                 typeof(CommandLoggingRegistrationTests).Assembly);
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
-            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(new Response("last options"));
             }, default);

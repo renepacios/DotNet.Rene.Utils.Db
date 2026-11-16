@@ -24,7 +24,7 @@ namespace Rene.Utils.Db.Logging
                         .ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
-                return await next().ConfigureAwait(false);
+                return await next(cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException exception)
             {

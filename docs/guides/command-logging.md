@@ -5,6 +5,21 @@ You do not need to implement a pipeline behavior or install Serilog, NLog or ano
 logging framework. The callbacks choose the service that writes the events.
 Logging is disabled unless explicitly configured.
 
+## MediatR compatibility
+
+This source tree builds against MediatR 12.5.0. MediatR 12.5.0 changed
+`RequestHandlerDelegate<TResponse>` to accept an optional `CancellationToken`;
+the previous parameterless delegate is not binary-compatible.
+
+If enabling logging throws `MissingMethodException` mentioning
+`RequestHandlerDelegate<TResponse>.Invoke()`, the application is loading a newer
+MediatR assembly with a Rene.Utils.Db build compiled against MediatR 12.4.0.
+Upgrade Rene.Utils.Db to a release built against MediatR 12.5.0. If that is not
+yet available, align the application and its dependencies on MediatR 12.4.0
+as a temporary workaround. Rebuild and redeploy the application so its output
+contains matching assemblies. The same compatibility requirement applies to
+the authorization behavior.
+
 ## Configure callbacks
 
 ```csharp
