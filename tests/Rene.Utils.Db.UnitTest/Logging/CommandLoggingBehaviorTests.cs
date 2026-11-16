@@ -18,7 +18,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             var stages = new List<string>();
             CommandLoggingContext before = null;
             CommandCompletedContext completed = null;
-            CancellationToken beforeToken = default, completedToken = default;
+            CancellationToken beforeToken = default, completedToken = default, handlerToken = default;
             using var cts = new CancellationTokenSource();
             using var provider = Provider(o =>
             {
@@ -35,8 +35,9 @@ namespace Rene.Utils.Db.UnitTest.Logging
             }, clock);
             using var scope = provider.CreateScope();
             var expected = new Response("original response");
-            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new DerivedRequest(), () =>
+            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new DerivedRequest(), token =>
             {
+                handlerToken = token;
                 stages.Add("Handler");
                 clock.Timestamp += 125;
                 clock.UtcNow = start.AddSeconds(rollbackUtc ? -60 : 5);
@@ -59,6 +60,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             completed.Outcome.Should().Be(CommandExecutionOutcome.Succeeded);
             completed.Exception.Should().BeNull();
             beforeToken.Should().Be(cts.Token);
+            handlerToken.Should().Be(cts.Token);
             completedToken.Should().Be(CancellationToken.None);
         }
 
@@ -79,7 +81,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             }, new ManualClock());
             using var scope = provider.CreateScope();
             var response = new Response("only callback");
-            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            var result = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); return Task.FromResult(response);
             }, default);
@@ -116,7 +118,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             });
             using var scope = provider.CreateScope();
             var expected = new Response("async response");
-            var pending = Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+            var pending = Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
             {
                 stages.Add("Handler"); handlerEntered.SetResult(); return handlerRelease.Task;
             }, default);
@@ -170,7 +172,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             });
             using var scope = provider.CreateScope();
             var caught = await Record.ExceptionAsync(() => Behavior<Request, Response>(scope.ServiceProvider)
-                .Handle(new Request(), () =>
+                .Handle(new Request(), _ =>
                 {
                     stages.Add("Handler");
                     if (canceled) cts.Cancel();
@@ -205,7 +207,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             });
             using var scope = provider.CreateScope();
             var caught = await Record.ExceptionAsync(() => Behavior<Request, Response>(scope.ServiceProvider)
-                .Handle(new Request(), () =>
+                .Handle(new Request(), _ =>
                 {
                     stages.Add("Handler"); return Task.FromResult(new Response("must not execute"));
                 }, cts.Token));
@@ -240,7 +242,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             }, logs: logs);
             using var scope = provider.CreateScope();
             var caught = await Record.ExceptionAsync(() => Behavior<Request, Response>(scope.ServiceProvider)
-                .Handle(new Request(), () =>
+                .Handle(new Request(), _ =>
                 {
                     stages.Add("Handler"); return Task.FromResult(new Response("must not run"));
                 }, cts.Token));
@@ -300,7 +302,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             var expected = new Response("successful handler");
             Response response = null;
             var caught = await Record.ExceptionAsync(async () =>
-                response = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), () =>
+                response = await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(), _ =>
                 {
                     stages.Add("Handler");
                     return handlerOutcome == "Success" ? Task.FromResult(expected) : Task.FromException<Response>(handlerFailure);
@@ -351,7 +353,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             using var second = provider.CreateScope();
             foreach (var scope in new[] { first, second })
                 await Behavior<Request, Response>(scope.ServiceProvider).Handle(new Request(),
-                    () => Task.FromResult(new Response("scoped")), default);
+                    _ => Task.FromResult(new Response("scoped")), default);
 
             providers.Should().Equal(first.ServiceProvider, first.ServiceProvider, second.ServiceProvider, second.ServiceProvider);
             markers[0].Should().BeSameAs(first.ServiceProvider.GetRequiredService<ScopedMarker>());
@@ -375,10 +377,10 @@ namespace Rene.Utils.Db.UnitTest.Logging
             var innerFailure = new InvalidOperationException("inner");
             var outerResponse = new Response("outer");
             Exception innerCaught = null;
-            var result = await behavior.Handle(new Request(), async () =>
+            var result = await behavior.Handle(new Request(), async _ =>
             {
                 innerCaught = await Record.ExceptionAsync(() => behavior.Handle(new DerivedRequest(),
-                    () => Task.FromException<Response>(innerFailure), default));
+                    _ => Task.FromException<Response>(innerFailure), default));
                 return outerResponse;
             }, default);
 
@@ -412,7 +414,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             var behavior = Behavior<Request, Response>(scope.ServiceProvider);
             var firstResponse = new Response("first");
             var secondFailure = new ApplicationException("overlapping failure");
-            var firstTask = behavior.Handle(new Request(), async () =>
+            var firstTask = behavior.Handle(new Request(), async _ =>
             {
                 entered.SetResult(); await release.Task; return firstResponse;
             }, default);
@@ -421,7 +423,7 @@ namespace Rene.Utils.Db.UnitTest.Logging
             try
             {
                 secondCaught = await Record.ExceptionAsync(() => behavior.Handle(new DerivedRequest(),
-                    () => Task.FromException<Response>(secondFailure), default));
+                    _ => Task.FromException<Response>(secondFailure), default));
             }
             finally { release.SetResult(); }
             var firstResponseObserved = await firstTask;

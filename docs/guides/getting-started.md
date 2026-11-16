@@ -14,6 +14,9 @@ dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 10.0.14
 
 MediatR is a dependency of the library. Choose EF Core packages compatible with the
 version used by the installed release of Rene.Utils.Db; this source tree uses EF Core 10.
+This source tree builds against MediatR 12.5.0. For older Rene.Utils.Db releases
+compiled against MediatR 12.4.0, see [MediatR compatibility](command-logging.md#mediatr-compatibility)
+before upgrading MediatR independently.
 
 ## Define the entity, context and view model
 
