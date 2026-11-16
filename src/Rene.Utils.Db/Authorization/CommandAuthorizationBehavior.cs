@@ -46,7 +46,7 @@ namespace Rene.Utils.Db.Authorization
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            return await next().ConfigureAwait(false);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
     }
 }

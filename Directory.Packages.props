@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Library">
-    <PackageVersion Include="MediatR" Version="12.4.0" />
+    <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="Rene.Utils.Core" Version="1.4.0" />
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
