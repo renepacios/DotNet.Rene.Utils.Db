@@ -148,6 +148,38 @@ service collection, not scoped to a particular DbContext.
 
 ## Examples
 
+### Simulate a heavy command
+
+`AddDbUtils` also registers `HeavyCommandTest`, a diagnostic request that does not
+access the database or require a mapper. Send it through MediatR to exercise the
+same logging pipeline:
+
+```csharp
+using Rene.Utils.Db.Commands;
+
+await mediator.Send(new HeavyCommandTest(1500L), cancellationToken);
+
+await mediator.Send(new HeavyCommandTest(async token =>
+{
+    await myService.RunAsync(token);
+}), cancellationToken);
+```
+
+The `long` duration is in milliseconds. Zero completes immediately; negative
+values throw `ArgumentOutOfRangeException`. Long delays are split into bounded
+intervals to avoid timer overflow. The delay uses `Task.Delay` and the registered
+`TimeProvider`, not `Thread.Sleep`, so it does not block a thread.
+
+The delegate is awaited once and receives the request cancellation token.
+Exceptions and cancellation propagate normally and appear in `Completed`;
+returning a null task is an error. Cancellation of custom work is cooperative:
+the delegate must observe its token. `HeavyCommandTest` has no result; use
+`Completed.Elapsed` to measure it. With logging disabled it still executes, but
+does not produce logging callbacks. Keep diagnostic endpoints protected and
+avoid exposing arbitrary delays or work execution to untrusted callers.
+
+### Sample applications
+
 All three sample projects demonstrate the feature without new package references:
 
 | Sample | Demonstration |

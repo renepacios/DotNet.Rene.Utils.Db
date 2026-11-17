@@ -8,6 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using Extensions;
     using Rene.Utils.Db;
     using Rene.Utils.Db.Builder;
+    using Rene.Utils.Db.Commands;
     using Rene.Utils.Db.DbInternal;
     using System.Reflection;
 
@@ -112,6 +113,9 @@ namespace Microsoft.Extensions.DependencyInjection
             DbUtilsOptions options, Assembly[] assemblies)
             where TDbContext : DbContext
         {
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddTransient<IRequestHandler<HeavyCommandTest>, HeavyCommandTestHandler>();
+
             if (options.CommandLogging != null)
                 services.AddDbUtilsCommandLogging(logging =>
                 {
